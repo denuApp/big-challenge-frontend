@@ -1,47 +1,94 @@
-import { FC, useReducer } from 'react';
+import { FC, useEffect, useReducer } from 'react';
 import { AuthContext, authReducer } from './';
+import { IUser } from '../../interfaces';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 export interface AuthState {
-    user: null,
-    error: null,
+    isLoggedIn: boolean,
+    user?: IUser,
+    token?: string,
 }
 
 interface AuthProviderProps {
    children: React.ReactNode;
 }
 
-const Auth_INITIAL_STATE: AuthState = {
-    user: null,
-    error: null,
+const AUTH_INITIAL_STATE: AuthState = {
+    isLoggedIn: false,
+    user: undefined,
+    token: '',
 };
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
-const [state, dispatch] = useReducer(authReducer,Auth_INITIAL_STATE);
+    const [state, dispatch] = useReducer( authReducer, AUTH_INITIAL_STATE );
+    const { data, status } = useSession();
+    const router = useRouter();
 
-    const login = (email: string, password: string) => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (email === 'jj' && password === 'jj') {
-                    dispatch({ type: 'AUTH - LOGIN_SUCCESS', payload: { user: { email } } });
-                    resolve();
-                } else {
-                    dispatch({ type: 'AUTH - LOGIN_FAILURE' });
-                    reject();
+    useEffect(() => {
+      if ( status === 'authenticated' ) {
+        dispatch({ type: '[Auth] - Login', payload: data?.user as IUser })
+      }
+    
+    }, [ status, data ])
+
+
+    const signup = async( name: string, email: string, password: string ): Promise<{hasError: boolean; message?: string}> => {
+        try {
+            //ver como hacer con axios?
+            const { data } = await tesloApi.post('/user/register', { name, email, password });
+            const { token, user } = data;
+            dispatch({ type: '[Auth] - Login', payload: user });
+            return {
+                hasError: false
+            }
+
+        } catch (error) {
+            if ( axios.isAxiosError(error) ) {
+                return {
+                    hasError: true,
+                    message: error.response?.data.message
                 }
-            }, 1000);
-        });
+            }
+
+            return {
+                hasError: true,
+                message: 'No se pudo crear el usuario - intente de nuevo'
+            }
+        }
     }
 
-    const signout = () => {
-        dispatch({ type: 'AUTH - SIGNOUT_SUCCESS' });
+    const login = async( email: string, password: string ): Promise<boolean> => {
+
+        try {
+            //ver como hacer el axios?
+            const { data } = await tesloApi.post('/user/login', { email, password });
+            const { token, user } = data;
+            dispatch({ type: '[Auth] - Login', payload: user });
+            return true;
+        } catch (error) {
+            return false;
+        }
+
+    }
+
+
+    const logout = () => {
+        dispatch({ type: '[Auth] - Logout' });
     }
 
    return (
        <AuthContext.Provider value={{
-          property: false
+           ...state,
+
+              //Methods
+            signup,
+            login,
+            logout,
        }}>
           { children }
        </AuthContext.Provider>
    );
+
 }

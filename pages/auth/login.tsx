@@ -23,7 +23,7 @@ const menuItemsGeneral = [
           }}
         >
           <Typography component="h1" variant="h5">
-            Log Inn
+            Log In
           </Typography>
           <Box 
             component="form" 

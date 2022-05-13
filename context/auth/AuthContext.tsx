@@ -1,10 +1,13 @@
 import { createContext } from 'react';
+import { IUser } from '../../interfaces';
 
 interface ContextProps {
-   user: null,
-   error: null,
-   login: (email: string, password: string) => Promise<void>,
-   signout: () => void,
+   isLoggedIn: boolean;
+   user?: IUser;
+   token?: string;
+   signup: (name: string, email: string, password: string) => Promise<{ hasError: boolean; message?: string; }>;
+   login: (email: string, password: string) => Promise<boolean>;
+   logout: () => void;
 
 }
 

@@ -29,7 +29,7 @@ export const Sidebar: FC<Props> = ({menuItems , menuItemsGeneral}) => {
             {menuItems &&
                 <List>
                     {
-                        menuItemsGeneral.map((text, index) => (
+                        menuItems.map((text, index) => (
                             <ListItem button key={text.text}>
                                 <NextLink href={text.href}>
                                     <ListItemText primary={text.text} />

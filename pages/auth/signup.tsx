@@ -100,7 +100,7 @@ const signup = () => {
                 <Grid item>
                 <NextLink href='/auth/login' passHref>
                     <Link variant="body2">
-                    Already have an account? Sign In
+                    Already have an account? Log In
                     </Link>
                 </NextLink>
                 </Grid>
