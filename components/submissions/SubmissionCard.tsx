@@ -118,13 +118,13 @@ export default function RecipeReviewCard() {
       <CardContent >
 
       
-                    <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    </Typography>
-  
+          <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </Typography>
+
 
                 
             {/* <CardActionArea>
@@ -149,18 +149,10 @@ export default function RecipeReviewCard() {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography variant='h5' sx={{ marginBottom: '10px'}}>Patient Info:</Typography>
+          <Typography variant='h5' sx={{ marginBottom: '10px'}}>Doctor:</Typography>
+          {/* {submission.symptoms && <Typography paragraph>{ submission.doctor }</Typography>} */}
           <Typography paragraph>
-            Name: Denise Appel
-          </Typography>
-          <Typography paragraph>
-            Birth Date: 03/06/00
-          </Typography>
-          <Typography paragraph>
-            Height: 5'10"
-          </Typography>
-          <Typography>
-           Weight: 150 lbs
+            none
           </Typography>
         </CardContent>
       </Collapse>
