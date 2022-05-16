@@ -1,7 +1,7 @@
 import { List, Paper } from '@mui/material';
 import React from 'react'
 import { ISubmission } from '../../interfaces/submission';
-import SubmissionCard from './SubmissionCard';
+import PatientSubmissionCard from './PatientSubmissionCard';
 
 // interface Props {
 //     status: string;
@@ -29,9 +29,10 @@ const SubmissionList = () => {
                             <SubmissionCard key={ submission.id } submission={ submission } />
                         ))
                     } */}
-                    <SubmissionCard />
-                    <SubmissionCard />
-                    <SubmissionCard />
+                    <PatientSubmissionCard />
+                    <PatientSubmissionCard />
+                    <PatientSubmissionCard />
+
                 </List>
 
             {/* </Paper> */}

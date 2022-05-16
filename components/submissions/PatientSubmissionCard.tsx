@@ -81,6 +81,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Grid } from '@mui/material';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -97,7 +98,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export default function RecipeReviewCard() {
+export default function PatientSubmissionCard() {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -105,6 +106,8 @@ export default function RecipeReviewCard() {
   };
 
   return (
+    <Grid item xs={ 12 } sm={ 4 }>
+
     <Card elevation={15}  sx={{ marginBottom: 2, marginLeft: 2, marginRight: 2 , borderRadius: 3 }}>
       <CardHeader
        
@@ -157,5 +160,6 @@ export default function RecipeReviewCard() {
         </CardContent>
       </Collapse>
     </Card>
+    </Grid>
   );
 }
