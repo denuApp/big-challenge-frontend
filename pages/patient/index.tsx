@@ -1,22 +1,43 @@
 import React from 'react'
 import { Layout } from '../../components/layouts';
-import { Card, CardHeader, Grid, Typography } from '@mui/material';
+import { Button, Card, CardHeader, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextareaAutosize, TextField, Typography } from '@mui/material';
 import { borderRadius, fontWeight, height } from '@mui/system';
 import SubmissionList from '../../components/submissions/SubmissionList';
 import { grey, red } from '@mui/material/colors';
+import { TextFields } from '@mui/icons-material';
 
 const patientDashboard = () => {
+  const [openModal, setOpenModal] = React.useState(false);
+  const [value, setValue] = React.useState('');
+
+  const OpenAddSubmission = () => {
+    setOpenModal(true);
+  };
+
+  const handleChangeSymptoms = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  };
+
+  const CloseAddSubmission = () => {
+    setOpenModal(false);
+  };
 
   const menuItemsGeneral = [
     {text: 'Log Out', href: '/auth/login'}];
 
   const menuItemsPatient = [{text: 'Dashboard', href: '/patient'}, {text: 'Personal Info', href: '/auth/login'}];
 
+  
+
   return (
     <Layout menuItems={menuItemsPatient} menuItemsGeneral={menuItemsGeneral} >
       
-      <Typography variant="h4" sx={{ padding: '20px', fontWeight: 'semi-bold' }}>Submission Dashboard:</Typography>
+      <Grid sx={{ display:'flex', justifyContent: 'space-between'}}>
+        <Typography variant="h4" sx={{ padding: '20px', fontWeight: 'semi-bold' }}>Submission Dashboard:</Typography>
+        <Button variant="outlined" onClick={OpenAddSubmission} sx={{height: 40, marginTop: 2, marginRight: 2}}>NEW SUBMISSION</Button>
+      </Grid>
       
+
       <Grid container spacing={ 2 }>
 
         <Grid item xs={ 12 } sm={ 4 }>
@@ -24,13 +45,6 @@ const patientDashboard = () => {
             <CardHeader  title="Pending" sx={{ color:'gray' }}/>
 
             <SubmissionList />
-            {/* Agregar una nueva entrada */}
-            {/* Listado de las entradas */}
-            {/* <NewEntry />
-            <EntryList status='pending'/> */}
-
-
-
           </Card>
         </Grid>
 
@@ -52,6 +66,31 @@ const patientDashboard = () => {
 
 
       </Grid>
+
+      <Dialog open={openModal} onClose={CloseAddSubmission}>
+        <DialogTitle>Add new Submission</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+           Be suere that your personal data is filled before making a submission.
+          </DialogContentText>
+          <TextField
+            multiline
+            margin="dense"
+            id="symptoms"
+            label="Symptoms"
+            type="text"
+            rows={4}
+            value={value}
+            onChange={handleChangeSymptoms}
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={CloseAddSubmission}>Cancel</Button>
+          <Button onClick={CloseAddSubmission}>Submit</Button>
+        </DialogActions>
+      </Dialog>
 
     </Layout>
   )
