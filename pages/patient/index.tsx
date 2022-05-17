@@ -18,9 +18,16 @@ const patientDashboard = () => {
     setValue(event.target.value);
   };
 
-  const CloseAddSubmission = () => {
+  const CancelAddSubmission = () => {
+    setValue('');
     setOpenModal(false);
   };
+
+  const handleAddSubmission = () => {
+    // add submission to database
+    setOpenModal(false);
+    setValue('');
+  }
 
   const menuItemsGeneral = [
     {text: 'Log Out', href: '/auth/login'}];
@@ -67,7 +74,7 @@ const patientDashboard = () => {
 
       </Grid>
 
-      <Dialog open={openModal} onClose={CloseAddSubmission}>
+      <Dialog open={openModal} onClose={CancelAddSubmission}>
         <DialogTitle>Add new Submission</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -87,8 +94,8 @@ const patientDashboard = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={CloseAddSubmission}>Cancel</Button>
-          <Button onClick={CloseAddSubmission}>Submit</Button>
+          <Button onClick={CancelAddSubmission}>Cancel</Button>
+          <Button onClick={handleAddSubmission}>Submit</Button>
         </DialogActions>
       </Dialog>
 
