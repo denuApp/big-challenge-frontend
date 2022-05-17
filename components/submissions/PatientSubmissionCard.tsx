@@ -98,7 +98,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export default function PatientSubmissionCard() {
+export default function PatientCard() {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -106,9 +106,9 @@ export default function PatientSubmissionCard() {
   };
 
   return (
-    <Grid item xs={ 12 } sm={ 4 }>
+    <Grid item >
 
-    <Card elevation={15}  sx={{ marginBottom: 2, marginLeft: 2, marginRight: 2 , borderRadius: 3 }}>
+    <Card elevation={15}  sx={{ marginBottom: 2, marginLeft: 2, marginRight: 2 , borderRadius: 3 , minHeight: 350 }}>
       <CardHeader
        
         action={
@@ -118,7 +118,7 @@ export default function PatientSubmissionCard() {
         }
         title="Symptoms"
         />
-      <CardContent >
+      <CardContent sx={{minHeight: 250}} >
 
       
           <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 

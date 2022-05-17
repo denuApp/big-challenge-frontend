@@ -159,7 +159,7 @@ export default function DoctorSubmissionCard() {
       title="Jhon Doe"
     />
 
-      <CardContent >
+<CardContent sx={{minHeight: 250}} >
 
       
           <Typography >Lorem ipsum dolor sit amet, consectetur adipiscing elit, 

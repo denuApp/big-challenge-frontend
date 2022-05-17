@@ -19,8 +19,11 @@ class MyDocument extends Document {
                         rel="short cut icon"
                         href="/fabicon.ico"
                     />
+                    
                 </Head>
                 <body>
+                
+                <script src="//static.filestackapi.com/filestack-js/3.x.x/filestack.min.js"></script>
                     <Main />
                     <NextScript />
                 </body>
