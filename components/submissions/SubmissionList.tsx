@@ -1,4 +1,4 @@
-import { List, Paper } from '@mui/material';
+import { CardActionArea, List, Paper } from '@mui/material';
 import React from 'react'
 import { ISubmission } from '../../interfaces/submission';
 import PatientSubmissionCard from './PatientSubmissionCard';

@@ -69,20 +69,16 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
-import Avatar from "@mui/material/Avatar";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Button,
+  CardActions,
+  CardActionArea,
   Dialog,
   DialogActions,
   DialogContent,
@@ -93,7 +89,7 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-import { NewSubmission } from "../dialogs/NewSubmission";
+import { NewSubmission } from "../dialogs";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -116,7 +112,8 @@ export default function PatientCard() {
   const [openAlert, setOpenAlert] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
   //value('')
-  const [value, setValue] = React.useState(`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+  const [value, setValue] =
+    React.useState(`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
   ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
   aliquip ex ea commodo consequat. Duis aute irure dolor in
@@ -124,7 +121,7 @@ export default function PatientCard() {
   pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
   culpa qui officia deserunt Lorem ipsum dolor sit amet, consectetur
   adipiscing elit`);
-  const [editValues, setEditValues] = React.useState(value);
+
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -157,20 +154,16 @@ export default function PatientCard() {
     setOpenEdit(true);
   };
 
-  const handleChangeEdit = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEditValues(event.target.value);
-  };
-
   const handleCancelEdit = () => {
     setOpenEdit(false);
-  }
+  };
 
   const handleAcceptEdit = () => {
-    //updat in database
-    setValue(editValues);
-    setOpenEdit(false);
-  }
 
+    //update in database
+    console.log(value);
+    setOpenEdit(false);
+  };
 
   return (
     <Grid item>
@@ -184,48 +177,28 @@ export default function PatientCard() {
           minHeight: 350,
         }}
       >
-        <CardHeader
-          action={
-            <Grid>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseMenu}
-              >
-                <MenuItem onClick={handleDeleteSubmission}>Delete </MenuItem>
-                <MenuItem onClick={handleEditSubmission}>Edit </MenuItem>
-              </Menu>
-            </Grid>
-          }
-          title="Symptoms"
-        />
+          <CardHeader
+            action={
+              <Grid>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              </Grid>
+            }
+            title="Symptoms"
+          />
 
-        <CardContent sx={{ minHeight: 250 }}>
-          <Typography>
-            {value}
-          </Typography>
+          <CardContent sx={{ minHeight: 250 }}>
+            <Typography>{value}</Typography>
 
-          {/* <CardActionArea>
+            {/* <CardActionArea>
                 <CardContent>
                     <Typography sx={{ whiteSpace: 'pre-line' }}>{ submission.symptoms }</Typography>
                 </CardContent>
@@ -234,79 +207,78 @@ export default function PatientCard() {
                     <Typography variant='body2'>hace 30 minutos</Typography>
                 </CardActions>
             </CardActionArea> */}
-        </CardContent>
-
-        {/* expand card */}
-        <CardActions disableSpacing>
-          <ExpandMore
-            expand={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
-            <ExpandMoreIcon />
-          </ExpandMore>
-        </CardActions>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-            <Typography variant="h5" sx={{ marginBottom: "10px" }}>
-              Doctor:
-            </Typography>
-            {/* {submission.symptoms && <Typography paragraph>{ submission.doctor }</Typography>} */}
-            <Typography paragraph>none</Typography>
           </CardContent>
-        </Collapse>
 
-        {/* Alert delete dialog */}
-        <Dialog
-          open={openAlert}
-          onClose={handleCancel}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Are you sure you want to delete this submission?"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              By deleting it you wont be able to see it in your dashboard and
-              neither will your doctor.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCancel}>Cancel</Button>
-            <Button onClick={handleAccept} autoFocus>
-              Accept
-            </Button>
-          </DialogActions>
-        </Dialog>
+          {/* expand card */}
+          <CardActions disableSpacing>
+            <ExpandMore
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </ExpandMore>
+          </CardActions>
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+              <Typography variant="h5" sx={{ marginBottom: "10px" }}>
+                Doctor:
+              </Typography>
+              {/* {submission.symptoms && <Typography paragraph>{ submission.doctor }</Typography>} */}
+              <Typography paragraph>none</Typography>
+            </CardContent>
+          </Collapse>
+      </Card>
 
-        {/*edit submission dialog */}
-        <Dialog open={openEdit} onClose={handleCancelEdit}>
-        <DialogTitle>Add new Submission</DialogTitle>
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+      >
+        {/* si el estado es ready que no se pueda hacer ninguna edicion */}
+        <MenuItem onClick={handleDeleteSubmission}>Delete </MenuItem>
+        <MenuItem onClick={handleEditSubmission}>Edit </MenuItem>
+      </Menu>
+
+      {/* Alert delete dialog */}
+      <Dialog
+        open={openAlert}
+        onClose={handleCancel}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure you want to delete this submission?"}
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-           Be suere that your personal data is filled before making a submission.
+          <DialogContentText id="alert-dialog-description">
+            By deleting it you wont be able to see it in your dashboard and
+            neither will your doctor.
           </DialogContentText>
-          <TextField
-            multiline
-            margin="dense"
-            id="symptoms"
-            label="Symptoms"
-            type="text"
-            rows={4}
-            value={editValues}
-            onChange={handleChangeEdit}
-            fullWidth
-            variant="standard"
-          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancelEdit}>Cancel</Button>
-          <Button onClick={handleAcceptEdit}>Submit</Button>
+          <Button onClick={handleCancel}>Cancel</Button>
+          <Button onClick={handleAccept} autoFocus>
+            Accept
+          </Button>
         </DialogActions>
       </Dialog>
-      </Card>
+
+      {/* edit submission dialog */}
+
+      <NewSubmission title="Edit Submission" open={openEdit} value={value} setValue={setValue} onSubmit={handleAcceptEdit} onClose={handleCancelEdit}/>
+
     </Grid>
   );
 }

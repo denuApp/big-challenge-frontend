@@ -4,22 +4,27 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 interface Props {
     title?: string,
     value?: string,
+    setValue?: (value: string) => void,
     open?: boolean,
     onClose?: () => void,
-    onSubmit?: (value) => void,
+    onSubmit?: () => void,
 }
 
-export const NewSubmission:FC<Props> = ({title, value, open,onClose, onSubmit }) => {
+export const NewSubmission:FC<Props> = ({title='Add new Submission', value, setValue, open,onClose, onSubmit }) => {
     const [symptom, setSymptom] = React.useState(value);
 
     const handleChangeSymptoms = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSymptom(event.target.value);
-        value = symptom;
     };
+
+    const handelSubmit = () => {
+        setValue(symptom);
+        onSubmit();
+    }
 
   return (
     <Dialog open={open} onClose={onClose}>
-    <DialogTitle>Add new Submission</DialogTitle>
+    <DialogTitle>{title}</DialogTitle>
     <DialogContent>
       <DialogContentText>
        Be suere that your personal data is filled before making a submission.
@@ -39,7 +44,7 @@ export const NewSubmission:FC<Props> = ({title, value, open,onClose, onSubmit })
     </DialogContent>
     <DialogActions>
       <Button onClick={onClose}>Cancel</Button>
-      <Button onClick={onSubmit}>Submit</Button>
+      <Button onClick={handelSubmit}>Submit</Button>
     </DialogActions>
   </Dialog>
   )
