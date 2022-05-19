@@ -21,7 +21,7 @@ const allSumbissions = () => {
   return (
     <Layout menuItems={menuItemDoctor}  menuItemsGeneral={menuItemsGeneral} >
       
-      <Typography variant="h4" sx={{ padding: '20px', fontWeight: 'semi-bold' }}>Submission Dashboard:</Typography>
+      <Typography variant="h4" sx={{ padding: '20px', fontWeight: 'semi-bold' }}>Submission Dashboard</Typography>
 
         <Grid container spacing={ 2 } sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
 

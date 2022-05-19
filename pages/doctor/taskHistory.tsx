@@ -18,7 +18,7 @@ const taskHistory = () => {
   return (
     <Layout menuItems={menuItemDoctor}  menuItemsGeneral={menuItemsGeneral} >
       
-      <Typography variant="h4" sx={{ padding: '20px', fontWeight: 'semi-bold' }}>Task History:</Typography>
+      <Typography variant="h4" sx={{ padding: '20px', fontWeight: 'semi-bold' }}>Task History</Typography>
 
         <Grid container spacing={ 2 } sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
 

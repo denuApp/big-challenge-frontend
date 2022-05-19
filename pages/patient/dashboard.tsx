@@ -1,12 +1,6 @@
 import React from "react";
 import { Layout } from "../../components/layouts";
-import {
-  Button,
-  Card,
-  CardHeader,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Button, Card, CardHeader, Grid, Typography } from "@mui/material";
 import SubmissionList from "../../components/submissions/SubmissionList";
 import { NewSubmission } from "../../components/dialogs";
 
@@ -36,8 +30,8 @@ const patientDashboard = () => {
   const menuItemsGeneral = [{ text: "Log Out", href: "/auth/login" }];
 
   const menuItemsPatient = [
-    { text: "Dashboard", href: "/patient" },
-    { text: "Personal Info", href: "/auth/login" },
+    { text: "Dashboard", href: "/patient/dashboard" },
+    { text: "Personal Info", href: "/patient/personalInfo" },
   ];
 
   return (
@@ -47,15 +41,15 @@ const patientDashboard = () => {
           variant="h4"
           sx={{ padding: "20px", fontWeight: "semi-bold" }}
         >
-          Submission Dashboard:
+          Submission Dashboard
         </Typography>
-          <Button
-            variant="outlined"
-            onClick={OpenAddSubmission}
-            sx={{ height: 40, marginTop: 2, marginRight: 2 }}
-          >
-            NEW SUBMISSION
-          </Button>
+        <Button
+          variant="outlined"
+          onClick={OpenAddSubmission}
+          sx={{ height: 40, marginTop: 2, marginRight: 2 }}
+        >
+          NEW SUBMISSION
+        </Button>
       </Grid>
 
       <Grid container spacing={2}>
@@ -84,8 +78,13 @@ const patientDashboard = () => {
         </Grid>
       </Grid>
 
-      <NewSubmission open={openModal} value={value} setValue={setValue} onClose={CancelAddSubmission} onSubmit={handleAddSubmission} />
-
+      <NewSubmission
+        open={openModal}
+        value={value}
+        setValue={setValue}
+        onClose={CancelAddSubmission}
+        onSubmit={handleAddSubmission}
+      />
     </Layout>
   );
 };
