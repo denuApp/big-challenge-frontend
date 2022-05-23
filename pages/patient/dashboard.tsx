@@ -56,7 +56,7 @@ const dashboard = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={4}  >
           <Card sx={{ height: "calc(100vh - 100px )", borderRadius: "15px"  }} >
-            <CardHeader align='right' title="PENDING" sx={{ padding: '30px', color: 'gray' }} />
+            <CardHeader align='right' title="PENDING" sx={{ padding: '30px', color: '#c62828' }} />
 
             <SubmissionList />
           </Card>
@@ -64,7 +64,7 @@ const dashboard = () => {
 
         <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ height: "calc(100vh - 100px )", borderRadius: "15px" }}>
-          <CardHeader align='right' title="IN PROGRESS" sx={{ padding: '30px', color: 'gray' }} />
+          <CardHeader align='right' color="yellow" title="IN PROGRESS" sx={{ padding: '30px', color: '#fdd835' }} />
             <SubmissionList />
             {/* <EntryList status='in-progress' /> */}
           </Card>
@@ -72,7 +72,7 @@ const dashboard = () => {
 
         <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ height: "calc(100vh - 100px )", borderRadius: "15px" }}>
-          <CardHeader align='right' title="READY" sx={{ padding: '30px', color: 'gray' }} />
+          <CardHeader align='right' color="green" title="READY" sx={{ padding: '30px', color: '#7cb342' }} />
             <PatientReadySubmissionCard />
             {/* <EntryList status='finished' /> */}
           </Card>
