@@ -1,12 +1,14 @@
-import React from "react";
+
 import { Layout } from "../../components/layouts";
 import { Button, Card, CardHeader, Grid, Typography } from "@mui/material";
-import SubmissionList from "../../components/submissions/SubmissionList";
 import { NewSubmission } from "../../components/dialogs";
+import { useState } from "react";
+import { PatientReadySubmissionCard, SubmissionList } from "../../components/submissions";
 
-const patientDashboard = () => {
-  const [openModal, setOpenModal] = React.useState(false);
-  const [value, setValue] = React.useState("");
+
+const dashboard = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [value, setValue] = useState("");
 
   const OpenAddSubmission = () => {
     setOpenModal(true);
@@ -27,52 +29,46 @@ const patientDashboard = () => {
     setValue("");
   };
 
-  const menuItemsGeneral = [{ text: "Log Out", href: "/auth/login" }];
-
-  const menuItemsPatient = [
-    { text: "Dashboard", href: "/patient/dashboard" },
-    { text: "Personal Info", href: "/patient/personalInfo" },
-  ];
-
   return (
-    <Layout menuItems={menuItemsPatient} menuItemsGeneral={menuItemsGeneral}>
+    <Layout >
       <Grid sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography
-          variant="h4"
-          sx={{ padding: "20px", fontWeight: "semi-bold" }}
+          variant="h3" 
+          sx={{ padding: '20px', fontWeight: 'bold', letterSpacing: '2px' }}
         >
-          Submission Dashboard
+          SUBMISSION DASHBOARD
         </Typography>
         <Button
           variant="outlined"
           onClick={OpenAddSubmission}
-          sx={{ height: 40, marginTop: 2, marginRight: 2 }}
+          color="secondary"
+          sx={{ height: 40, marginTop: 3, marginRight: 2 }}
         >
           NEW SUBMISSION
         </Button>
       </Grid>
 
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={4}>
-          <Card sx={{ height: "calc(100vh - 100px )", borderRadius: "15px" }}>
-            <CardHeader title="Pending" sx={{ color: "gray" }} />
+        <Grid item xs={12} sm={6} md={4}  >
+          <Card sx={{ height: "calc(100vh - 100px )", borderRadius: "15px"  }} >
+            <CardHeader align='right' title="PENDING" sx={{ padding: '30px', color: 'gray' }} />
 
             <SubmissionList />
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ height: "calc(100vh - 100px )", borderRadius: "15px" }}>
-            <CardHeader title="In Progress" sx={{ color: "gray" }} />
+          <CardHeader align='right' title="IN PROGRESS" sx={{ padding: '30px', color: 'gray' }} />
             <SubmissionList />
             {/* <EntryList status='in-progress' /> */}
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ height: "calc(100vh - 100px )", borderRadius: "15px" }}>
-            <CardHeader title="Ready" sx={{ color: "gray" }} />
-            <SubmissionList />
+          <CardHeader align='right' title="READY" sx={{ padding: '30px', color: 'gray' }} />
+            <PatientReadySubmissionCard />
             {/* <EntryList status='finished' /> */}
           </Card>
         </Grid>
@@ -89,4 +85,4 @@ const patientDashboard = () => {
   );
 };
 
-export default patientDashboard;
+export default dashboard;

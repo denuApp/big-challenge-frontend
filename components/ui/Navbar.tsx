@@ -8,8 +8,8 @@ export const Navbar = () => {
     const { openSideMenu } = useContext( UIContext );
 
   return (
-    <AppBar position="sticky" > 
-        <Toolbar>
+    <AppBar position="sticky"> 
+        <Toolbar >
             <IconButton
                 size='large'
                 edge="start"

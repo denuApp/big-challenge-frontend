@@ -106,7 +106,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export default function PatientCard() {
+export const PatientCard = () => {
   const [expanded, setExpanded] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [openAlert, setOpenAlert] = React.useState(false);
@@ -168,7 +168,7 @@ export default function PatientCard() {
   return (
     <Grid item>
       <Card
-        elevation={15}
+        elevation={10}
         sx={{
           marginBottom: 2,
           marginLeft: 2,
@@ -188,7 +188,7 @@ export default function PatientCard() {
                   onClick={handleMenu}
                   color="inherit"
                 >
-                  <MoreVertIcon />
+                  <MoreVertIcon color="secondary"/>
                 </IconButton>
               </Grid>
             }
@@ -217,7 +217,7 @@ export default function PatientCard() {
               aria-expanded={expanded}
               aria-label="show more"
             >
-              <ExpandMoreIcon />
+              <ExpandMoreIcon color="secondary"/>
             </ExpandMore>
           </CardActions>
           <Collapse in={expanded} timeout="auto" unmountOnExit>

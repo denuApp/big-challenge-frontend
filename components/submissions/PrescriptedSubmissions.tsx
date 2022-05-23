@@ -15,6 +15,7 @@ import { display } from "@mui/system";
 import { useState } from "react";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import Head from "next/head";
+import { Download } from "@mui/icons-material";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -31,7 +32,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export const TakenDoctorSubmissionCard = () => {
+export const PrescriptedSubmissions = () => {
   const [expanded, setExpanded] = React.useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -57,7 +58,7 @@ export const TakenDoctorSubmissionCard = () => {
     }
   };
 
-  const handleClick = () => {
+  const handleUpload = () => {
     // fileInput.current.click();
     const client = filestack.init("Aej2qZqQQQWyQQQQQQQQQ");
     client.picker().open();
@@ -123,8 +124,11 @@ export const TakenDoctorSubmissionCard = () => {
                   onChange={uploadToServer}
                 />
 
-                <MenuItem onClick={handleClick} aria-label="file upload ">
-                  Upload Prescription
+                <MenuItem onClick={handleUpload} aria-label="file upload ">
+                  Edit Prescription
+                </MenuItem>
+                <MenuItem aria-label="file upload ">
+                  Download Prescription
                 </MenuItem>
               </Menu>
             </Grid>
@@ -144,7 +148,6 @@ export const TakenDoctorSubmissionCard = () => {
             adipiscing elit,
           </Typography>
 
-        
         </CardContent>
 
         <CardActions disableSpacing>

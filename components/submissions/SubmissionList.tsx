@@ -1,7 +1,7 @@
 import { CardActionArea, List, Paper } from '@mui/material';
 import React from 'react'
 import { ISubmission } from '../../interfaces/submission';
-import PatientSubmissionCard from './PatientSubmissionCard';
+import { PatientCard } from './PatientSubmissionCard';
 
 // interface Props {
 //     status: string;
@@ -9,7 +9,7 @@ import PatientSubmissionCard from './PatientSubmissionCard';
 
 // const SubmissionList = ({status}) => {
 
-const SubmissionList = () => {
+export const SubmissionList = () => {
     // const { entries, updateEntry } = useContext( EntriesContext );
 
     //usar funcion de backend para obtener las entradas pos estado
@@ -29,9 +29,9 @@ const SubmissionList = () => {
                             <SubmissionCard key={ submission.id } submission={ submission } />
                         ))
                     } */}
-                    <PatientSubmissionCard />
-                    <PatientSubmissionCard />
-                    <PatientSubmissionCard />
+                    <PatientCard />
+                    <PatientCard />
+                    <PatientCard />
 
                 </List>
 
@@ -39,5 +39,3 @@ const SubmissionList = () => {
         </div>
     )
 }
-
-export default SubmissionList;

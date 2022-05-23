@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }) {
     <SessionProvider>
       <AuthProvider>
         <UIProvider >
-          <ThemeProvider theme={darkTheme}>
+          <ThemeProvider theme={lightTheme}>
           {/* <LocalizationProvider dateAdapter={AdapterDateFns}> */}
             <CssBaseline>
               <Component {...pageProps} />

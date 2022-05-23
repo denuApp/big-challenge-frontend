@@ -2,23 +2,15 @@
 import React from 'react'
 import { Layout } from '../../components/layouts';
 import { Card, CardHeader, Grid, Typography, MenuItem, List } from '@mui/material';
-import TakenDoctorSubmissionCard from '../../components/submissions/TakenDoctorSubmissions';
+import { PrescriptedSubmissions, TakenDoctorSubmissionCard  } from '../../components/submissions';
+
 
 const taskHistory = () => {
-
-    const menuItemDoctor = [
-        {text: 'All submissions', href: './allSubmissions'},
-        {text: 'Taken submission', href: './taskHistory'},
-      ]
-
-  const menuItemsGeneral = [
-    {text: 'Log Out', href: '/auth/login'}];
-
  
   return (
-    <Layout menuItems={menuItemDoctor}  menuItemsGeneral={menuItemsGeneral} >
+    <Layout  >
       
-      <Typography variant="h4" sx={{ padding: '20px', fontWeight: 'semi-bold' }}>Task History</Typography>
+      <Typography variant="h3"  sx={{ padding: '20px', fontWeight: 'bold', letterSpacing: '2px'}}>TASK HISTORY</Typography>
 
         <Grid container spacing={ 2 } sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
 
@@ -31,7 +23,7 @@ const taskHistory = () => {
 
           <Grid item xs={ 12 } sm={ 6 }>
           <Card  sx={{ height: 'calc(100vh - 100px )' , borderRadius: '15px'}}>
-          <CardHeader  title="Not Prescripted" sx={{ color:'white' }}/>
+          <CardHeader align='right' title="NOT PRESCRIPTED" sx={{ padding: '30px' }}/>
             <List sx={{overflow: 'auto', height: 'calc(90vh - 90px )'}}>
                 <TakenDoctorSubmissionCard />
                 <TakenDoctorSubmissionCard />
@@ -44,13 +36,12 @@ const taskHistory = () => {
 
         <Grid item xs={ 12 } sm={6 }>
           <Card   sx={{ height: 'calc(100vh - 100px )', borderRadius: '15px'}}>
-            <CardHeader  title="Prescripted" sx={{ color:'gray' }}/>
+            <CardHeader align='right' title="PRESCRIPTED" sx={{ color:'gray', padding: '30px'}}/>
 
             <List sx={{overflow: 'auto', height: 'calc(90vh - 90px )'}}>
-                <TakenDoctorSubmissionCard />
-                <TakenDoctorSubmissionCard />
-                <TakenDoctorSubmissionCard />
-                <TakenDoctorSubmissionCard />
+                <PrescriptedSubmissions />
+                <PrescriptedSubmissions />
+                <PrescriptedSubmissions />
             </List>
 
           </Card>

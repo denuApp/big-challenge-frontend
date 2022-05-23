@@ -6,8 +6,8 @@ import { Link } from '@mui/material';
 
 const HomePage: NextPage = () => {
   return (
-    <Layout menuItems={['']} menuItemsGeneral={['']}>
-      Go to <NextLink href="/patient/dashboard" passHref>
+    <Layout >
+      Go to <NextLink href="" passHref>
         <Link>Dashboard</Link>
       </NextLink>
     </Layout>

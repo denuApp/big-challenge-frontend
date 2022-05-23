@@ -1,4 +1,4 @@
-import * as React from "react";
+
 import {
   Checkbox,
   FormControlLabel,
@@ -12,6 +12,7 @@ import {
   RadioGroup,
   Radio,
   Stack,
+  InputAdornment,
 } from "@mui/material";
 import { Layout } from "../../components/layouts";
 import Card from "@mui/material/Card";
@@ -19,38 +20,62 @@ import { padding, margin, height } from "@mui/system";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { useState } from "react";
 
-const personalInfo = () => {
-  const menuItemsGeneral = [{ text: "Log Out", href: "/auth/login" }];
-  const [dateValue, setDateValue] = React.useState<Date | null>(new Date());
-  const [nameValue, setNameValue] = React.useState("");
-  const [lastNameValue, setLastNameValue] = React.useState("");
-  const [idValue, setIdValue] = React.useState("");
-  const [heightValue, setHeightValue] = React.useState("");
-  const [weightValue, setWeightValue] = React.useState("");
-  const [genderValue, setGenderValue] = React.useState("");
+interface State {
+    date: Date | null,
+    name: string,
+    lastName: string,
+    id: string,
+    height: number,
+    weight: number,
+    gender: string
+}
 
-  const handleChange = (newValue: Date | null) => {
-    setDateValue(newValue);
-  };
+export const personalInfo = () => {
+  const [values, setValues] = useState<State>({
+    date: new Date(),
+    name: '',
+    lastName: '',
+    id:'',
+    height: null,
+    weight: null,
+    gender: ''
 
-  const menuItemsPatient = [
-    { text: "Dashboard", href: "/patient/dashboard" },
-    { text: "Personal Info", href: "/patient/personalInfo" },
-  ];
+  });
 
-  const handleSelect = (
-    event: React.ChangeEvent<{ name: string; value: string }>
-  ) => {
-    setGenderValue(event.target.value);
+  const handleChange =
+    (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setValues({ ...values, [prop]: event.target.value });
+    };
+
+
+  // const handleSelect = (
+  //   event: React.ChangeEvent<{ name: string; value: string }>
+  // ) => {
+  //   setGenderValue(event.target.value);
+  // };
+
+  const checkRequiredFields = () => {
+    if (values.name === '' || values.lastName === '' || values.id === '' || values.height === null || values.weight === null || values.date === null) {
+      return true;
+    }
+    return false;
   };
 
   const handleSave = () => {
+    const boolean = checkRequiredFields();
+    if (boolean) {
+      alert("Please fill all the required fields");
+    } else {
+      alert("Saved");
+    }
+  
     // add patient info to database
   };
 
   return (
-    <Layout menuItems={menuItemsPatient} menuItemsGeneral={menuItemsGeneral}>
+    <Layout >
       <Grid
         container
         component="main"
@@ -66,8 +91,8 @@ const personalInfo = () => {
           alignContent: "center",
         }}
       >
-        <Typography component="h1" variant="h5">
-          Personal Information
+        <Typography component="h1" variant="h4" marginBottom={4}>
+          PERSONAL INFORMATION
         </Typography>
         {/* <Box 
             component="form" 
@@ -82,8 +107,8 @@ const personalInfo = () => {
               id="firstName"
               name="firstName"
               label="First name"
-              value={nameValue}
-              onChange={(event) => setNameValue(event.target.value)}
+              value={values.name}
+              onChange={handleChange("name")}
               fullWidth
               autoComplete="given-name"
               variant="standard"
@@ -95,8 +120,8 @@ const personalInfo = () => {
               id="lastName"
               name="lastName"
               label="Last name"
-              value={lastNameValue}
-              onChange={(e) => setLastNameValue(e.target.value)}
+              value={values.lastName}
+              onChange={handleChange("lastName")}
               fullWidth
               autoComplete="family-name"
               variant="standard"
@@ -108,10 +133,9 @@ const personalInfo = () => {
               id="idNumber"
               name="idNumber"
               label="Id Number"
-              value={idValue}
-              onChange={(e) => setIdValue(e.target.value)}
+              value={values.id}
+              onChange={handleChange("id")}
               fullWidth
-              autoComplete="shipping address-line1"
               variant="standard"
               helperText="without special characters"
             />
@@ -122,10 +146,13 @@ const personalInfo = () => {
               id="height"
               name="height"
               label="Height"
-              value={heightValue}
-              onChange={(e) => setHeightValue(e.target.value)}
+              value={values.height}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">mt</InputAdornment>,
+              }}
+              onChange={handleChange("height")}
+              type="number"
               fullWidth
-              autoComplete="shipping address-level2"
               variant="standard"
             />
           </Grid>
@@ -135,8 +162,12 @@ const personalInfo = () => {
               id="weight"
               name="weight"
               label="Weight"
-              value={weightValue}
-              onChange={(e) => setWeightValue(e.target.value)}
+              value={values.weight}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">kg</InputAdornment>,
+              }}
+              onChange={handleChange("weight")}
+              type="number"
               fullWidth
               variant="standard"
             />
@@ -147,8 +178,8 @@ const personalInfo = () => {
             </FormLabel>
             <RadioGroup
               row
-              value={genderValue}
-              onChange={handleSelect}
+              value={values.gender}
+              onChange={handleChange("gender")}
               aria-labelledby="demo-row-radio-buttons-group-label"
               name="row-radio-buttons-group"
             >
@@ -171,8 +202,8 @@ const personalInfo = () => {
               <DesktopDatePicker
                 label="Birth date *"
                 inputFormat="MM/dd/yyyy"
-                value={dateValue}
-                onChange={handleChange}
+                value={values.date}
+                onChange={(date) => setValues({ ...values, date })}
                 renderInput={(params) => <TextField {...params} />}
               />
             </LocalizationProvider>
@@ -190,6 +221,7 @@ const personalInfo = () => {
               variant="contained"
               sx={{ height: 40, marginTop: 2, marginRight: 2, padding: 2 }}
               onClick={handleSave}
+              color="secondary"
             >
               Save changes
             </Button>

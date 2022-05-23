@@ -1,2 +1,3 @@
-export * from './dashboard';
-export {default} from './patientInfo';
+// import patientDashboard from './dashboard';
+// export * from './dashboard';
+// export * from './personalInfo';
