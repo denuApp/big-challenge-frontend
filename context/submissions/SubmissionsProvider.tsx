@@ -46,10 +46,10 @@ const addNewSubmission = async(symptoms: string): Promise<{hasError: boolean; me
     }
 }
 
-const updateSubmission = async(submission: ISubmission): Promise<boolean> => {
+const updateSubmission = async(submission: ISubmission, symptoms: string): Promise<boolean> => {
     try {
       //ver como hacer con axios?
-      const { data } = await api.post('/patient/update-submission', { submission });
+      const { data } = await api.post('/patient/update-submission/submission_id', { symptoms });
       dispatch({ type: '[Submission] Submission-Updated', payload: data });
       return true;
     } catch (error) {
@@ -97,13 +97,13 @@ const uploadPrescription = async(submission: ISubmission, file: File): Promise<b
   }
 }
 
-const refreshEntries = async() => {
+const refreshSubmissions = async() => {
   const { data } = await api.get<ISubmission[]>('/submissions');
   dispatch({ type: '[Submission] Refresh-Data', payload: data });
 }
 
 useEffect(() => {
-refreshEntries();
+refreshSubmissions();
 }, []);
 
   return (

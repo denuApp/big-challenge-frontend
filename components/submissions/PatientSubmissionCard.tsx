@@ -87,9 +87,9 @@ import {
   Grid,
   Menu,
   MenuItem,
-  TextField,
 } from "@mui/material";
 import { NewSubmission } from "../dialogs";
+import { SubmissionsContext } from '../../context/submissions';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -111,6 +111,7 @@ export const PatientCard = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [openAlert, setOpenAlert] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
+  const { updateSubmission, deleteSubmission } = React.useContext(SubmissionsContext);
   //value('')
   const [value, setValue] =
     React.useState(`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -144,12 +145,14 @@ export const PatientCard = () => {
   };
 
   const handleDeleteSubmission = () => {
+    //deleteSubmission(submssion);
     setOpenAlert(true);
     setAnchorEl(null);
   };
 
   const handleEditSubmission = () => {
     //setValue(submission.symptoms);
+    
     setAnchorEl(null);
     setOpenEdit(true);
   };
@@ -161,7 +164,7 @@ export const PatientCard = () => {
   const handleAcceptEdit = () => {
 
     //update in database
-    console.log(value);
+    //updateSubmission(submission, value);
     setOpenEdit(false);
   };
 

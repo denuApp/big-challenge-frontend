@@ -2,18 +2,15 @@ import {
   Box,
   Divider,
   Drawer,
-  Link,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  rgbToHex,
   Typography,
 } from "@mui/material";
-import { FC, useContext } from "react";
+import { useContext } from "react";
 import { UIContext } from "../../context/ui/UIContext";
-import NextLink from "next/link";
-import { NextRouter, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";

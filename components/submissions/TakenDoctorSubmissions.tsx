@@ -10,11 +10,8 @@ import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Grid, Menu, MenuItem, Button } from "@mui/material";
-import { display } from "@mui/system";
+import { Grid, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import Head from "next/head";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;

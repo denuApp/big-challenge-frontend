@@ -2,21 +2,25 @@
 import { Layout } from "../../components/layouts";
 import { Button, Card, CardHeader, Grid, Typography } from "@mui/material";
 import { NewSubmission } from "../../components/dialogs";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { PatientReadySubmissionCard, SubmissionList } from "../../components/submissions";
+import { ISubmission } from "../../interfaces";
+import { SubmissionsContext } from '../../context/submissions';
 
 
 const dashboard = () => {
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState("");
+  const {submissions, addNewSubmission} = useContext(SubmissionsContext);
+
 
   const OpenAddSubmission = () => {
     setOpenModal(true);
   };
 
-  const handleChangeSymptoms = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  };
+  // const handleChangeSymptoms = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setValue(event.target.value);
+  // };
 
   const CancelAddSubmission = () => {
     setValue("");
@@ -25,8 +29,9 @@ const dashboard = () => {
 
   const handleAddSubmission = () => {
     // add submission to database
+    addNewSubmission(value);
     setOpenModal(false);
-    setValue("");
+    setValue('');
   };
 
   return (

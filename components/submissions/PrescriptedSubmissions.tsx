@@ -5,17 +5,13 @@ import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
-import Avatar from "@mui/material/Avatar";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Grid, Menu, MenuItem, Button } from "@mui/material";
-import { display } from "@mui/system";
+import { Grid, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import Head from "next/head";
-import { Download } from "@mui/icons-material";
+import { SubmissionsContext } from "../../context/submissions";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -41,6 +37,7 @@ export const PrescriptedSubmissions = () => {
   const [createObjectURL, setCreateObjectURL] = useState(null);
 
   const fileInput = React.useRef(null);
+  const { uploadPrescription } = React.useContext(SubmissionsContext);
 
   const uploadToServer = async (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -51,6 +48,8 @@ export const PrescriptedSubmissions = () => {
 
       //   const body = new FormData();
       //   body.append("file", image);
+      //   uploadPrescription(body);
+      //   no se si va lo de abajo (casi seguro no)
       //   const response = await fetch("/api/upload-file", {
       //     method: "POST",
       //     body
@@ -99,7 +98,7 @@ export const PrescriptedSubmissions = () => {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <MoreVertIcon color="secondary"/>
+                <MoreVertIcon color="secondary" />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -147,7 +146,6 @@ export const PrescriptedSubmissions = () => {
             culpa qui officia deserunt Lorem ipsum dolor sit amet, consectetur
             adipiscing elit,
           </Typography>
-
         </CardContent>
 
         <CardActions disableSpacing>
@@ -157,7 +155,7 @@ export const PrescriptedSubmissions = () => {
             aria-expanded={expanded}
             aria-label="show more"
           >
-            <ExpandMoreIcon color="secondary"/>
+            <ExpandMoreIcon color="secondary" />
           </ExpandMore>
         </CardActions>
 
@@ -181,4 +179,4 @@ export const PrescriptedSubmissions = () => {
       </Card>
     </Grid>
   );
-}
+};
