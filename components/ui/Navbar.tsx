@@ -1,11 +1,25 @@
 import { AppBar, Grid, IconButton, Toolbar, Typography } from "@mui/material"
 import  MenuOutlinedIcon from "@mui/icons-material/MenuOutlined"
-import { useContext } from "react"
+import { useContext, useState, useEffect } from 'react';
 import { UIContext } from '../../context/ui';
+import { AuthContext } from "../../context/auth";
+import { IUser } from '../../interfaces/user';
 
-export const Navbar = () => {
+
+export const Navbar =  () => {
 
     const { openSideMenu } = useContext( UIContext );
+    const { getUser } = useContext( AuthContext );
+    const [user, setUser] = useState<IUser>(null);
+
+    const getCurrentUser = async () => {
+        const {user} = await getUser();
+        setUser(user);
+    }
+
+    useEffect(() => {
+        getCurrentUser();
+    }, []);
 
   return (
     <AppBar position="sticky"> 
@@ -20,7 +34,7 @@ export const Navbar = () => {
 
             <Grid sx={{ display: 'flex', width: '100%', justifyContent:"space-between"}}>
                 <Typography variant="h6">VirtualDoc</Typography>
-                <Typography variant="subtitle1" color='white'> Welcome, John! </Typography>
+                {user && <Typography variant="subtitle1" color='white'> Welcome, {user.name} ! </Typography> }
             </Grid>
            
         </Toolbar>

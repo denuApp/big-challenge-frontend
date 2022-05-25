@@ -1,5 +1,11 @@
 import {
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   Drawer,
   List,
@@ -8,7 +14,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { useContext } from "react";
+import { useContext, useState } from 'react';
 import { UIContext } from "../../context/ui/UIContext";
 import { useRouter } from "next/router";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
@@ -16,6 +22,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
+import { AuthContext } from "../../context/auth";
 
 const style = "text.secondary";
 
@@ -24,6 +31,8 @@ const style = "text.secondary";
 export const Sidebar = () => {
   const { sidemenuOpen, closeSideMenu } = useContext(UIContext);
   const { asPath } = useRouter();
+  const {logout}  = useContext(AuthContext);
+  const [openAlert, setOpenAlert] = useState(false);
   const router = useRouter();
 
   const loggedOut = [
@@ -84,6 +93,21 @@ export const Sidebar = () => {
     router.push(url);
   };
 
+  const handleLogout = () => {
+    setOpenAlert(true);
+  };
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
+
+  const  handleAcceptLogout = () => {
+    logout();
+    handleCloseAlert();
+    closeSideMenu();
+  }
+
+
   return (
     <Drawer anchor="left" open={sidemenuOpen}  onClose={closeSideMenu} sx={{opacity: 1}}>
       <Box sx={{ width: 250 }}>
@@ -129,7 +153,7 @@ export const Sidebar = () => {
                   button
                   key={item.text}
                   sx={{borderLeft:  asPath === item.href ? 4 : 0, borderColor: 'secondary.main'}}
-                  onClick={() => navigateTo(item.href)}
+                  onClick={logout}
                 >
                   <ListItemIcon >{asPath === item.href ? item.activeIcon : item.icon}</ListItemIcon>
                   <ListItemText sx={{color: asPath === item.href ? style : undefined}} primary={item.text} />
@@ -158,7 +182,7 @@ export const Sidebar = () => {
                   button
                   key={item.text}
                   sx={{borderLeft:  asPath === item.href ? 4 : 0, borderColor: 'secondary.main'}}
-                  onClick={() => navigateTo(item.href)}
+                  onClick={handleLogout}
                 >
                   <ListItemIcon>{asPath === item.href ? item.activeIcon : item.icon}</ListItemIcon>
                   <ListItemText sx={{color: asPath === item.href ? style : undefined}}  primary={item.text} />
@@ -168,6 +192,22 @@ export const Sidebar = () => {
           )}
         </List>
       </Box>
+      <Dialog
+        open={openAlert}
+        onClose={handleCloseAlert}
+        aria-labelledby="LogOut"
+        aria-describedby="Logout-account"
+      >
+        <DialogTitle id="logout-title">
+          {"Are you sure you want to logout?"}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleCloseAlert}>Disagree</Button>
+          <Button onClick={handleAcceptLogout} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Drawer>
   );
 };

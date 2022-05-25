@@ -47,7 +47,7 @@ const signup = () => {
     showPassword: false,
     role: "patient",
   });
-  const { signup } = useContext(AuthContext);
+  const { signup, user } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
   const [openLoading, setOpenLoading] = useState(false);
@@ -85,7 +85,7 @@ const signup = () => {
         setOpenLoading(true);
       }
     } else {
-      setErrorMessage("Please fill all fields");
+      setErrorMessage("Wrong email or password");
     }
   };
 

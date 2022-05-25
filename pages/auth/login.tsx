@@ -13,6 +13,8 @@ import {
   TextField,
   Typography,
   IconButton,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import React, { useState } from "react";
 import { Layout } from "../../components/layouts/Layout";
@@ -36,24 +38,19 @@ const login = () => {
     password: "",
     showPassword: false,
   });
-  const { user, isLoggedIn, login } = useContext(AuthContext);
+  const {login } = useContext(AuthContext);
   const router = useRouter();
   const [errorMessage, setErrorMessage] = React.useState("");
+  const [openLoading, setOpenLoading] = useState(false);
 
-  const handleLogin = () => {
-    login(values.email, values.password);
+  const handleLogin = async () => {
+    const { hasError, message, user } = await login(values.email, values.password);
 
-    if (isLoggedIn) {
-      if (user.role === "patient") {
-        router.push("/patient/dashboard");
-      }
-
-      if (user.role === "doctor") {
-        router.push("/doctor/dashboard");
-      }
-    } else {
-      setErrorMessage ("Wrong email or password");
-      
+    if(hasError){
+      setErrorMessage (message);
+    }
+    else{
+      setOpenLoading(true);
     }
   };
 
@@ -146,6 +143,12 @@ const login = () => {
             >
               Log In
             </Button>
+            <Backdrop
+              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={openLoading}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
             <Grid container>
               <Grid item>
                 <NextLink href="/auth/signup" passHref>
