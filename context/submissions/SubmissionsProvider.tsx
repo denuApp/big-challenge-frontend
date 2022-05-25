@@ -109,14 +109,14 @@ const uploadPrescription = async(submission: ISubmission, file: File): Promise<b
   }
 }
 
-// const refreshSubmissions = async() => {
-//   const { data } = await bigApi().get<ISubmission[]>('/submissions');
-//   dispatch({ type: '[Submission] Refresh-Data', payload: data });
-// }
+const refreshSubmissions = async() => {
+  const { data } = await bigApi().get('get-submissions');
+  dispatch({ type: '[Submission] Refresh-Data', payload: data });
+}
 
-// useEffect(() => {
-// refreshSubmissions();
-// }, []);
+useEffect(() => {
+  refreshSubmissions();
+}, []);
 
   return (
     <SubmissionsContext.Provider

@@ -8,7 +8,7 @@ type SubmissionActionType =
     | { type: '[Submission] Submission-Deleted', payload: ISubmission  }
     | { type: '[Submission] Submission-Taken', payload: ISubmission  }
     | { type: '[Submission] Submission-Upload-Prescription', payload: ISubmission  }
-   | { type: '[Submission] Refresh-Data', payload: ISubmission[]  } 
+   | { type: '[Submission] Refresh-Data', payload: ISubmission[] } 
 
 
 export const submissionsReducer = ( state: SubmissionsState, action: SubmissionActionType ): SubmissionsState => {
@@ -63,7 +63,7 @@ export const submissionsReducer = ( state: SubmissionsState, action: SubmissionA
       case '[Submission] Refresh-Data':
          return {
             ...state,
-            submissions: [ ...action.payload ]
+            submissions: [ action.payload ]
          }
 
        default:
