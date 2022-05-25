@@ -1,4 +1,4 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Timelapse, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -16,11 +16,18 @@ import {
   OutlinedInput,
   InputAdornment,
   IconButton,
+  Alert,
+  Snackbar,
+  CircularProgress,
+  Backdrop,
 } from "@mui/material";
-import { display, flexbox, margin } from "@mui/system";
+import { display, flexbox, grid, margin, styled, height } from "@mui/system";
 import NextLink from "next/link";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Layout } from "../../components/layouts";
+import { AuthContext } from "../../context/auth";
+import { useRouter } from "next/router";
+import { SuccessAlert } from "../../components/dialogs";
 
 interface State {
   email: string;
@@ -40,9 +47,52 @@ const signup = () => {
     showPassword: false,
     role: "patient",
   });
+  const { signup } = useContext(AuthContext);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);
+  const [openLoading, setOpenLoading] = useState(false);
+  const router = useRouter();
+
+  const handleCloseAlert = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenAlert(false);
+  };
+
+  const handleSubmit = async () => {
+    // signup(values.email, values.name + ' ' + values.lastName, values.password, values.role);
+    if (
+      values.email != "" &&
+      values.name != "" &&
+      values.lastName != "" &&
+      values.password != ""
+    ) {
+      const { hasError, message } = await signup(
+        values.name + " " + values.lastName,
+        values.email,
+        values.password,
+        values.role
+      );
+      if (hasError) {
+        setErrorMessage(message);
+      } else {
+        setOpenAlert(true);
+        setOpenLoading(true);
+      }
+    } else {
+      setErrorMessage("Please fill all fields");
+    }
+  };
+
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setValues({ ...values, [prop]: event.target.value });
+      setErrorMessage("");
     };
 
   const handleClickShowPassword = () => {
@@ -138,7 +188,7 @@ const signup = () => {
                           {values.showPassword ? (
                             <VisibilityOff color="secondary" />
                           ) : (
-                            <Visibility color="secondary"/>
+                            <Visibility color="secondary" />
                           )}
                         </IconButton>
                       </InputAdornment>
@@ -164,14 +214,28 @@ const signup = () => {
                 checked={values.role === "doctor"}
               />
             </Grid>
+            <Typography variant="body2" color="error">
+              {errorMessage}
+            </Typography>
             <Button
-              type="submit"
+              onClick={handleSubmit}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Sign Up
             </Button>
+            <SuccessAlert
+              open={openAlert}
+              setOpen={setOpenAlert}
+              message="usuario registrado con exito"
+            />
+            <Backdrop
+              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={openLoading}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <NextLink href="/auth/login" passHref>
@@ -182,6 +246,11 @@ const signup = () => {
           </Box>
         </Box>
       </Container>
+      <Grid
+        container
+        justifyContent="center"
+        sx={{ display: "flex", alignItems: "flex-end" }}
+      ></Grid>
     </Layout>
   );
 };

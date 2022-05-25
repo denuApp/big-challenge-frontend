@@ -3,6 +3,9 @@ import { AuthContext, authReducer } from './';
 import { IUser } from '../../interfaces';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import bigApi from '../../config/headers';
+import axios from 'axios';
+import bigNoTokenApi from '../../config/headerNoToken';
 
 export interface AuthState {
     isLoggedIn: boolean,
@@ -33,13 +36,24 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     
     }, [ status, data ])
 
+    //axios. getuser para tener user que esta logueado
 
-    const signup = async( name: string, email: string, password: string ): Promise<{hasError: boolean; message?: string}> => {
+    const signup = async( name: string, email: string, password: string, role: string ): Promise<{hasError: boolean; message?: string}> => {
         try {
             //ver como hacer con axios?
-            const { data } = await tesloApi.post('/user/register', { name, email, password });
+            const { data } = await bigNoTokenApi().post('register-user', { 'name': name, 'email': email, 'password': password, 'roles': role });
             const { token, user } = data;
             dispatch({ type: '[Auth] - Login', payload: user });
+            localStorage.setItem('token', token);
+            if (role === "patient") {
+                setTimeout(() => {
+                  router.push("/patient/dashboard");
+                }, 2000);
+              } else {
+                setTimeout(() => {
+                  router.push("/doctor/allSubmissions");
+                }, 2000);
+              }
             return {
                 hasError: false
             }
@@ -48,13 +62,13 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
             if ( axios.isAxiosError(error) ) {
                 return {
                     hasError: true,
-                    message: error.response?.data.message
+                    message: error.response.data.message
                 }
             }
 
             return {
                 hasError: true,
-                message: 'No se pudo crear el usuario - intente de nuevo'
+                message: 'User could not be created - try again'
             }
         }
     }
@@ -63,9 +77,10 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
         try {
             //ver como hacer el axios?
-            const { data } = await tesloApi.post('/user/login', { email, password });
+            const { data } = await bigNoTokenApi().post('login-user', { email, password });
             const { token, user } = data;
             dispatch({ type: '[Auth] - Login', payload: user });
+            localStorage.setItem('token', token);
             return true;
         } catch (error) {
             return false;
@@ -76,6 +91,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
     const logout = () => {
         dispatch({ type: '[Auth] - Logout' });
+        localStorage.removeItem('token');
     }
 
    return (

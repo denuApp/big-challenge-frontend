@@ -1,11 +1,12 @@
+import { IUser } from './user';
 export interface ISubmission {
-    _id      : string;
-    patient_id: string;
-    doctor_id?: string;
+    id      : any;
+    patient: IUser;
+    doctor?: IUser;
     symptoms    : string;
     prescription?: string;
     status     : string;
 
-    createdAt?: string;
-    updatedAt?: string;
+    created_at?: string;
+    updated_at?: string;
 }

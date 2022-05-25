@@ -24,7 +24,7 @@ export const submissionsReducer = ( state: SubmissionsState, action: SubmissionA
           return {
              ...state,
              submissions: state.submissions.map( submission => {
-               if ( submission._id === action.payload._id ) {
+               if ( submission.id === action.payload.id ) {
                   submission.symptoms = action.payload.symptoms;
                }
                return submission;
@@ -35,15 +35,15 @@ export const submissionsReducer = ( state: SubmissionsState, action: SubmissionA
                 ...state,
                 submissions: state.submissions.filter( submission => 
                     
-                    submission._id !== action.payload._id)
+                    submission.id !== action.payload.id)
             }
         case '[Submission] Submission-Taken':
             return {
                 ...state,
                 submissions: state.submissions.map( submission => {
-                    if ( submission._id === action.payload._id ) {
-                        submission.state = 'in_progress';
-                        submission.doctor_id = action.payload.doctor_id;
+                    if ( submission.id === action.payload.id ) {
+                        submission.status = 'in_progress';
+                        submission.doctor.id = action.payload.doctor.id;
                     }
                     return submission;
                 })
@@ -52,8 +52,9 @@ export const submissionsReducer = ( state: SubmissionsState, action: SubmissionA
             return {
                 ...state,
                 submissions: state.submissions.map( submission => {
-                    if ( submission._id === action.payload._id ) {
+                    if ( submission.id === action.payload.id ) {
                         submission.prescription = action.payload.prescription;
+                        submission.status = 'ready';
                     }
                     return submission;
                 })

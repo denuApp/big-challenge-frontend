@@ -2,12 +2,11 @@ import axios from 'axios';
 import { config } from 'process';
 
 
-
-const bigApi =  () => {
+const bigNoTokenApi =  () => {
 
   const axiosInstance = axios.create({
     baseURL: 'http://big.test/api/',
-    headers: {'Accept': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token')}
+    headers: {'Accept': 'application/json'}
   });
 
   axiosInstance.interceptors.request.use(
@@ -19,4 +18,4 @@ const bigApi =  () => {
   return axiosInstance;
 }
 
-export default bigApi;
+export default bigNoTokenApi;

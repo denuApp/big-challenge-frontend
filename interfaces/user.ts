@@ -1,12 +1,14 @@
+import personalInfo from '../pages/patient/personalInfo';
+import { IPersonalInfo } from './personalInfo';
 
 
 export interface IUser {
-    _id      : string;
+    id      : any;
+    info     : IPersonalInfo;
     name     : string;
     email    : string;
-    password?: string;
     role     : string;
 
-    createdAt?: string;
-    updatedAt?: string;
+    created_at?: string;
+    updated_at?: string;
 }

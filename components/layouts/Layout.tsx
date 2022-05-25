@@ -3,7 +3,8 @@ import Head from 'next/head'
 import React, { FC } from 'react'
 import { Navbar, Sidebar } from '../ui';
 import { Toolbar } from '@mui/material';
-import { fontWeight } from '@mui/system';
+import { fontWeight, display } from '@mui/system';
+import { SuccessAlert } from '../dialogs';
 
 interface Props {
     title?: string,
@@ -11,6 +12,7 @@ interface Props {
 };
 
 export const Layout:FC<Props> = ({ title = 'Virtual Doc', children }) => {
+
   return (
     <Box sx={{ flexFlow: 1 }}>
         <Head>
@@ -21,7 +23,7 @@ export const Layout:FC<Props> = ({ title = 'Virtual Doc', children }) => {
 
         <Sidebar />
       
-        <Box sx={{ padding: '10px 20px' }}>
+        <Box sx={{ padding: '10px 20px'}}>
             { children }
         </Box>
     </Box>

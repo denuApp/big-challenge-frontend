@@ -19,12 +19,10 @@ import { Layout } from "../../components/layouts/Layout";
 import NextLink from "next/link";
 import { url } from "inspector";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-
-const menuItemsGeneral = [
-  { text: "Log In", href: "/auth/login" },
-  { text: "Sign Up", href: "/auth/signup" },
-];
-// const menuItemsGeneral = ['Sign In', 'Sign Up'];
+import { useContext } from "react";
+import { AuthContext } from "../../context/auth";
+import { useRouter } from "next/router";
+import { loadDefaultErrorComponents } from "next/dist/server/load-components";
 
 interface State {
   email: string;
@@ -32,16 +30,37 @@ interface State {
   showPassword: boolean;
 }
 
-const signin = () => {
+const login = () => {
   const [values, setValues] = useState<State>({
     email: "",
     password: "",
     showPassword: false,
   });
+  const { user, isLoggedIn, login } = useContext(AuthContext);
+  const router = useRouter();
+  const [errorMessage, setErrorMessage] = React.useState("");
+
+  const handleLogin = () => {
+    login(values.email, values.password);
+
+    if (isLoggedIn) {
+      if (user.role === "patient") {
+        router.push("/patient/dashboard");
+      }
+
+      if (user.role === "doctor") {
+        router.push("/doctor/dashboard");
+      }
+    } else {
+      setErrorMessage ("Wrong email or password");
+      
+    }
+  };
 
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setValues({ ...values, [prop]: event.target.value });
+      setErrorMessage("");
     };
 
   const handleClickShowPassword = () => {
@@ -82,21 +101,24 @@ const signin = () => {
               required
               fullWidth
               id="email"
+              value={values.email}
+              onChange={handleChange("email")}
               label="Email Address"
               name="email"
               autoComplete="email"
               autoFocus
+              error={errorMessage !== ""}
             />
-            <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Password
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                type={values.showPassword ? "text" : "password"}
-                value={values.password}
-                onChange={handleChange("password")}
-                endAdornment={
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="password"
+              type={values.showPassword ? "text" : "password"}
+              value={values.password}
+              onChange={handleChange("password")}
+              InputProps={{
+                endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
@@ -107,13 +129,18 @@ const signin = () => {
                       {values.showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
-                }
-                label="Password"
-              />
-            </FormControl>
+                ),
+              }}
+              label="Password"
+              name="password"
+              autoComplete="password"
+              autoFocus
+              error={errorMessage !== ""}
+            />
+            <Typography variant="body2" color="error"> {errorMessage} </Typography>
             <Button
-              type="submit"
               fullWidth
+              onClick={handleLogin}
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
@@ -135,4 +162,4 @@ const signin = () => {
   );
 };
 
-export default signin;
+export default login;
