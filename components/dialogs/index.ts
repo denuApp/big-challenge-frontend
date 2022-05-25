@@ -1,2 +1,2 @@
 export * from './NewSubmission';
-export * from './SuccessAlert';
+export * from './NewAlert';

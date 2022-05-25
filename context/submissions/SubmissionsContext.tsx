@@ -4,7 +4,7 @@ import { ISubmission } from '../../interfaces';
 interface ContextProps {
     submissions: ISubmission[];
 
-    addNewSubmission: (symptoms: string) => void;
+    addNewSubmission: (symptoms: string) => Promise<{ hasError: boolean; message?: string }> ;
     updateSubmission: (submission: ISubmission, symptoms:string) => void;
     deleteSubmission: (submission: ISubmission) => void;
     takeSubmission: (submission: ISubmission) => void;

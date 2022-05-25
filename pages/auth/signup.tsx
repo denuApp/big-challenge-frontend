@@ -27,7 +27,7 @@ import { useState, useContext } from "react";
 import { Layout } from "../../components/layouts";
 import { AuthContext } from "../../context/auth";
 import { useRouter } from "next/router";
-import { SuccessAlert } from "../../components/dialogs";
+import { NewAlert } from "../../components/dialogs";
 
 interface State {
   email: string;

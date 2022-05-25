@@ -1,16 +1,18 @@
 
 import { Layout } from "../../components/layouts";
 import { Button, Card, CardHeader, Grid, Typography } from "@mui/material";
-import { NewSubmission } from "../../components/dialogs";
+import { NewAlert, NewSubmission } from "../../components/dialogs";
 import { useContext, useState } from "react";
 import { PatientReadySubmissionCard, SubmissionList } from "../../components/submissions";
-import { ISubmission } from "../../interfaces";
 import { SubmissionsContext } from '../../context/submissions';
 
 
 const dashboard = () => {
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState<"success" | "error" | "warning" | "info">("success");
   const {submissions, addNewSubmission} = useContext(SubmissionsContext);
 
 
@@ -27,11 +29,21 @@ const dashboard = () => {
     setOpenModal(false);
   };
 
-  const handleAddSubmission = () => {
-    // add submission to database
-    addNewSubmission(value);
-    setOpenModal(false);
-    setValue('');
+  const handleAddSubmission = async () => {
+    console.log(value);
+    const {hasError, message} = await addNewSubmission(value);
+
+    if(hasError) {
+      setAlertMessage(message);
+      setAlertType("error");
+      setOpenAlert(true);
+    } else {
+      setAlertMessage("Submission added successfully");
+      setAlertType("success");
+      setOpenAlert(true);
+      setValue("");
+      setOpenModal(false);
+    }
   };
 
   return (
@@ -86,8 +98,15 @@ const dashboard = () => {
         onClose={CancelAddSubmission}
         onSubmit={handleAddSubmission}
       />
+      <NewAlert 
+        message={alertMessage}
+        type={alertType}
+        open={openAlert}
+        setOpen={setOpenAlert}
+      />
     </Layout>
   );
 };
 
 export default dashboard;
+

@@ -3,11 +3,12 @@ import { FC } from "react";
 
 interface Props {
     message: string;
+    type: "success" | "error" | "warning" | "info";
     open: boolean;
     setOpen: (open: boolean) => void;
 }
 
-export const SuccessAlert: FC<Props>= ({message, open, setOpen}) => {
+export const NewAlert: FC<Props>= ({message, type, open, setOpen}) => {
 
     const onClose = () => {
         setOpen(false);
@@ -17,7 +18,7 @@ export const SuccessAlert: FC<Props>= ({message, open, setOpen}) => {
     <Snackbar open={open} autoHideDuration={6000} onClose={onClose}>
         <Alert
         onClose={onClose}
-        severity="success"
+        severity={type}
         sx={{ width: "100%" }}
         >
         {message}

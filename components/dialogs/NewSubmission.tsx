@@ -11,14 +11,12 @@ interface Props {
 }
 
 export const NewSubmission:FC<Props> = ({title='Add new Submission', value, setValue, open,onClose, onSubmit }) => {
-    const [symptom, setSymptom] = React.useState(value);
 
     const handleChangeSymptoms = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSymptom(event.target.value);
+        setValue(event.target.value);
     };
 
     const handelSubmit = () => {
-        setValue(symptom);
         onSubmit();
     }
 
@@ -36,7 +34,7 @@ export const NewSubmission:FC<Props> = ({title='Add new Submission', value, setV
         label="Symptoms"
         type="text"
         rows={4}
-        value={symptom}
+        value={value}
         onChange={handleChangeSymptoms}
         fullWidth
         variant="standard"
