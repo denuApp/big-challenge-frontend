@@ -26,59 +26,59 @@ export const SubmissionsProvider: FC<SubmissionsProviderProps> = ({
   );
   
 
-  const addNewSubmission = async (
-    symptoms: string
-  ): Promise<{ hasError: boolean; message?: string }> => {
-    try {
-      //ver como hacer con axios?
-       const currentUser = JSON.parse(localStorage.getItem('user'));
+  // const addNewSubmission = async (
+  //   symptoms: string
+  // ): Promise<{ hasError: boolean; message?: string }> => {
+  //   try {
+  //     //ver como hacer con axios?
+  //      const currentUser = JSON.parse(localStorage.getItem('user'));
 
-      const { data } = await bigApi().post("store-submissions", {
-        patient_id: currentUser.id,
-        symptoms: symptoms,
-      });
-      dispatch({ type: "[Submission] Add-Submission", payload: data });
-      return {
-        hasError: false,
-      };
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return {
-          hasError: true,
-          message: error.response.data.message,
-        };
-      }
+  //     const { data } = await bigApi().post("store-submissions", {
+  //       patient_id: currentUser.id,
+  //       symptoms: symptoms,
+  //     });
+  //     dispatch({ type: "[Submission] Add-Submission", payload: data });
+  //     return {
+  //       hasError: false,
+  //     };
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       return {
+  //         hasError: true,
+  //         message: error.response.data.message,
+  //       };
+  //     }
 
-      return {
-        hasError: true,
-        message: "The submission could not be added",
-      };
-    }
-  };
+  //     return {
+  //       hasError: true,
+  //       message: "The submission could not be added",
+  //     };
+  //   }
+  // };
 
-const updateSubmission = async(submission: ISubmission, symptoms: string): Promise<boolean> => {
-    try {
-      //ver como hacer con axios?
-      const { data } = await bigApi().post('/patient/update-submission/submission_id', { symptoms });
-      dispatch({ type: '[Submission] Submission-Updated', payload: data });
-      return true;
-    } catch (error) {
-      return false;
-    }
-}
+// const updateSubmission = async(submission: ISubmission, symptoms: string): Promise<boolean> => {
+//     try {
+//       //ver como hacer con axios?
+//       const { data } = await bigApi().post('/patient/update-submission/submission_id', { symptoms });
+//       dispatch({ type: '[Submission] Submission-Updated', payload: data });
+//       return true;
+//     } catch (error) {
+//       return false;
+//     }
+// }
 
-const deleteSubmission = async(submission: ISubmission): Promise<boolean>  => {
+// const deleteSubmission = async(submission: ISubmission): Promise<boolean>  => {
 
-  try{
-    //ver como hacer con axios?
-    const { data } = await bigApi().post('/patient/delete-submission', { submission });
-    dispatch({ type: '[Submission] Submission-Deleted', payload: data });
-    return true;
-  } catch (error) {
-    return false;
-  }
+//   try{
+//     //ver como hacer con axios?
+//     const { data } = await bigApi().post('/patient/delete-submission', { submission });
+//     dispatch({ type: '[Submission] Submission-Deleted', payload: data });
+//     return true;
+//   } catch (error) {
+//     return false;
+//   }
 
-}
+// }
 
 const takeSubmission = async(submission: ISubmission): Promise<boolean>  => {
 
@@ -109,24 +109,27 @@ const uploadPrescription = async(submission: ISubmission, file: File): Promise<b
   }
 }
 
-const refreshSubmissions = async() => {
+
+
+const refreshSubmissions = async( ) => {
   const { data } = await bigApi().get('get-submissions');
   dispatch({ type: '[Submission] Refresh-Data', payload: data });
 }
 
-useEffect(() => {
-  refreshSubmissions();
-}, []);
+// useEffect(() => {
+//   refreshSubmissions();
+// }, []);
 
   return (
     <SubmissionsContext.Provider
       value={{
         ...state,
-        addNewSubmission,
-        updateSubmission,
-        deleteSubmission,
+        // addNewSubmission,
+        // updateSubmission,
+        // deleteSubmission,
         takeSubmission,
         uploadPrescription,
+        // getSubmissionsByStatus,
       }}
     >
       {children}

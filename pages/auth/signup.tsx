@@ -225,9 +225,10 @@ const signup = () => {
             >
               Sign Up
             </Button>
-            <SuccessAlert
+            <NewAlert
               open={openAlert}
               setOpen={setOpenAlert}
+              type="success"
               message="usuario registrado con exito"
             />
             <Backdrop

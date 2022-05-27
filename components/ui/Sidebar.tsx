@@ -1,5 +1,7 @@
 import {
+  Backdrop,
   Box,
+  CircularProgress,
   Divider,
   Drawer,
   List,
@@ -8,7 +10,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UIContext } from "../../context/ui/UIContext";
 import { useRouter } from "next/router";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
@@ -16,6 +18,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
+import { AuthContext } from "../../context/auth";
 
 const style = "text.secondary";
 
@@ -24,7 +27,14 @@ const style = "text.secondary";
 export const Sidebar = () => {
   const { sidemenuOpen, closeSideMenu } = useContext(UIContext);
   const { asPath } = useRouter();
+  const { logout } = useContext(AuthContext);
   const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    closeSideMenu();
+  };
+
 
   const loggedOut = [
     { text: "Log In", 
@@ -130,7 +140,7 @@ export const Sidebar = () => {
                   key={item.text}
                   sx={{borderLeft:  asPath === item.href ? 4 : 0, borderColor: 'secondary.main'}}
 
-                  // onClick={handleLogout}
+                  onClick={handleLogout}
                 >
                   <ListItemIcon >{asPath === item.href ? item.activeIcon : item.icon}</ListItemIcon>
                   <ListItemText sx={{color: asPath === item.href ? style : undefined}} primary={item.text} />
@@ -159,7 +169,7 @@ export const Sidebar = () => {
                   button
                   key={item.text}
                   sx={{borderLeft:  asPath === item.href ? 4 : 0, borderColor: 'secondary.main'}}
-                  onClick={() => navigateTo(item.href)}
+                  onClick={handleLogout}
                 >
                   <ListItemIcon>{asPath === item.href ? item.activeIcon : item.icon}</ListItemIcon>
                   <ListItemText sx={{color: asPath === item.href ? style : undefined}}  primary={item.text} />
