@@ -19,13 +19,6 @@ import UserService from "../../services/UsersService";
 import { NewAlert } from "../../components/dialogs";
 import { IPersonalInfo } from '../../interfaces/personalInfo';
 
-interface State {
-  date: Date | null;
-  id_numer: string;
-  height: number;
-  weight: number;
-  gender: string;
-}
 
 export const personalInfo = () => {
   const [values, setValues] = useState<IPersonalInfo>({
@@ -37,23 +30,13 @@ export const personalInfo = () => {
     gender: "",
   });
 
-  // const [personalInfo, setPersonalInfo]  = useState<IPersonalInfo>
-
-  const { getUser, getPatientInformation ,setPatientInfo, editPatientInfo } = new UserService();
-  const [user, setUser] = useState<IUser>(null);
+  const { getPatientInformation ,setPatientInfo, editPatientInfo } = new UserService();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState<"success" | "error" | "warning" | "info">("success");
 
-  // const getCurrentUser = async (): Promise<{ user: IUser }> => {
-  //   const { user } = await getUser();
-  //   setUser(user);
-  //   return {user: user};
-  // };
-
   const getPersonalInfo = async () => {
     const {info} = await getPatientInformation();
-    // const user = JSON.parse(localStorage.getItem("user"));
     if(info) {
       console.log(info);
       setValues(info);
@@ -230,7 +213,6 @@ export const personalInfo = () => {
 
        <NewAlert open={openSnackbar} setOpen={setOpenSnackbar} message={alertMessage} type={alertType} />
 
-        {/* </Box> */}
       </Grid>
     </Layout>
   );
