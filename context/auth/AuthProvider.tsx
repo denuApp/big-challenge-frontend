@@ -36,11 +36,11 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   //axios. getuser para tener user que esta logueado
 
-  const getUser = async (): Promise<{user: IUser}> => {
-      const user = await bigApi().get("get-user");
-    //   console.log(user);
-      return {user: user.data.data};
-  };
+  // const getUser = async (): Promise<{user: IUser}> => {
+  //     const user = await bigApi().get("get-user");
+  //   //   console.log(user);
+  //     return {user: user.data.data};
+  // };
 
   const signup = async (
     name: string,
@@ -145,7 +145,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         ...state,
 
         //Methods
-        getUser,
+        // getUser,
         signup,
         login,
         logout,

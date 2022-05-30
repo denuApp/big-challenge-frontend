@@ -4,12 +4,13 @@ import { useContext, useState, useEffect } from 'react';
 import { UIContext } from '../../context/ui';
 import { AuthContext } from "../../context/auth";
 import { IUser } from '../../interfaces/user';
+import UserService from '../../services/UsersService';
 
 
 export const Navbar =  () => {
 
     const { openSideMenu } = useContext( UIContext );
-    const { getUser } = useContext( AuthContext );
+    const { getUser } = new UserService( );
     const [user, setUser] = useState<IUser>(null);
 
     const getCurrentUser = async () => {
