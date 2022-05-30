@@ -65,7 +65,6 @@
 
 // export default SubmissionCard;
 
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -88,11 +87,19 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { NewSubmission } from "../dialogs";
+import { NewAlert, NewSubmission } from "../dialogs";
 import { SubmissionsContext } from '../../context/submissions';
+import { ISubmission } from "../../interfaces";
+import { FC, useContext, useState, useEffect } from 'react';
+import SubmissionService from '../../services/SubmissionsService';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
+}
+
+interface Props {
+    submission?: ISubmission;
+    afterDelete?: (ISubmission) => void;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -106,22 +113,17 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export const PatientCard = () => {
-  const [expanded, setExpanded] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [openAlert, setOpenAlert] = React.useState(false);
-  const [openEdit, setOpenEdit] = React.useState(false);
-  const { updateSubmission, deleteSubmission } = React.useContext(SubmissionsContext);
+export const PatientCard: FC<Props> = ({submission, afterDelete}) => {
+  const [expanded, setExpanded] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const { updateSubmission, deleteSubmission } = new SubmissionService();
   //value('')
-  const [value, setValue] =
-    React.useState(`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-  ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-  aliquip ex ea commodo consequat. Duis aute irure dolor in
-  reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-  pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-  culpa qui officia deserunt Lorem ipsum dolor sit amet, consectetur
-  adipiscing elit`);
+  const [value, setValue] = useState(submission.symptoms);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState<"success" | "error" | "warning" | "info">('success');
 
 
   const handleExpandClick = () => {
@@ -133,6 +135,17 @@ export const PatientCard = () => {
   };
 
   const handleAccept = () => {
+    const deleted = deleteSubmission(submission);
+    if(deleted) {
+      afterDelete(submission);
+      setOpenSnackbar(true);
+      setAlertMessage('Submission deleted successfully');
+      setAlertType('success');
+    }else{
+      setOpenSnackbar(true);
+      setAlertMessage('Error deleting submission');
+      setAlertType('error');
+    }
     setOpenAlert(false);
   };
 
@@ -145,7 +158,6 @@ export const PatientCard = () => {
   };
 
   const handleDeleteSubmission = () => {
-    //deleteSubmission(submssion);
     setOpenAlert(true);
     setAnchorEl(null);
   };
@@ -161,12 +173,15 @@ export const PatientCard = () => {
     setOpenEdit(false);
   };
 
-  const handleAcceptEdit = () => {
+  const handleAcceptEdit = (symptoms: string) => {
 
     //update in database
-    //updateSubmission(submission, value);
+    console.log(symptoms);
+    updateSubmission(submission, symptoms);
     setOpenEdit(false);
   };
+
+ 
 
   return (
     <Grid item>
@@ -229,7 +244,7 @@ export const PatientCard = () => {
                 Doctor:
               </Typography>
               {/* {submission.symptoms && <Typography paragraph>{ submission.doctor }</Typography>} */}
-              <Typography paragraph>none</Typography>
+              <Typography paragraph>{submission.doctor ? (submission.doctor.name) : "none"}</Typography>
             </CardContent>
           </Collapse>
       </Card>
@@ -281,7 +296,7 @@ export const PatientCard = () => {
       {/* edit submission dialog */}
 
       <NewSubmission title="Edit Submission" open={openEdit} value={value} setValue={setValue} onSubmit={handleAcceptEdit} onClose={handleCancelEdit}/>
-
+        <NewAlert open={openSnackbar} setOpen={setOpenSnackbar} message={alertMessage} type={alertType} />
     </Grid>
   );
 }

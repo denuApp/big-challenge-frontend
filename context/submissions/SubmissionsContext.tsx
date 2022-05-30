@@ -4,11 +4,12 @@ import { ISubmission } from '../../interfaces';
 interface ContextProps {
     submissions: ISubmission[];
 
-    addNewSubmission: (symptoms: string) => void;
-    updateSubmission: (submission: ISubmission, symptoms:string) => void;
-    deleteSubmission: (submission: ISubmission) => void;
-    takeSubmission: (submission: ISubmission) => void;
-    uploadPrescription: (submission: ISubmission, file: File) => void;
+    // addNewSubmission: (symptoms: string) => Promise<{ hasError: boolean; message?: string }> ;
+    // updateSubmission: (submission: ISubmission, symptoms:string) => void;
+    // deleteSubmission: (submission: ISubmission) => void;
+    // takeSubmission: (submission: ISubmission) => void;
+    // uploadPrescription: (submission: ISubmission, file: File) => void;
+    // getSubmissionsByStatus: (status: string) => Promise<{submissions: ISubmission[]}>;
 
 }
 

@@ -10,10 +10,16 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Grid, Menu, MenuItem } from "@mui/material";
-import { useState } from "react";
+import { useState, useRef, FC } from "react";
+import { ISubmission } from '../../interfaces/submission';
+import SubmissionService from '../../services/SubmissionsService';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
+}
+
+interface Props {
+  submission: ISubmission;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -27,15 +33,18 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export const TakenDoctorSubmissionCard = () => {
-  const [expanded, setExpanded] = React.useState(false);
+export const TakenDoctorSubmissionCard: FC<Props> = ({submission}) => {
+  const [expanded, setExpanded] = useState(false);
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const [image, setImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
 
-  const fileInput = React.useRef(null);
+  const fileInput = useRef(null);
+
+  const { uploadPrescription } = new SubmissionService();
+
 
   const uploadToServer = async (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -125,19 +134,12 @@ export const TakenDoctorSubmissionCard = () => {
               </Menu>
             </Grid>
           }
-          title="John Doe"
+          title={submission.patient.name}
         />
 
         <CardContent sx={{ minHeight: 250 }}>
           <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit,
+           {submission.symptoms}
           </Typography>
 
         

@@ -76,11 +76,19 @@ import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Grid, Menu, MenuItem } from "@mui/material";
-import { SubmissionsContext } from '../../context/submissions';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Menu, MenuItem } from "@mui/material";
+import { useState, FC } from 'react';
+import { ISubmission } from "../../interfaces";
+import SubmissionService from "../../services/SubmissionsService";
+import { NewAlert } from "../dialogs";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
+}
+
+interface Props {
+  submission: ISubmission;
+  afterTake: (ISubmission) => void;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -94,12 +102,29 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export const DoctorSubmissionCard= () => {
-  const [expanded, setExpanded] = React.useState(false);
+export const DoctorSubmissionCard: FC<Props> = ({submission, afterTake}) => {
+  const [expanded, setExpanded] = useState(false);
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const { takeSubmission } = React.useContext(SubmissionsContext);
+  const [openAlert, setOpenAlert] = useState(false);
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const [alertType, setAlertType] = useState<"success" | "error" | "warning" | "info">('success');
+
+  const { takeSubmission } = new SubmissionService();
+
+
+  const handleTakeSubmission = () => {
+    setOpenAlert(true);
+  }
+
+  const handleCancelTake = () => {
+    setOpenAlert(false);
+  }
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -113,15 +138,26 @@ export const DoctorSubmissionCard= () => {
     setExpanded(!expanded);
   };
 
-  const handleTakeSubmission = () => {
-    //takeSubmission(submission);
-    handleClose();
+  const handleAcceptTake =  () => {
+    const taken =  takeSubmission(submission);
+    if(taken) {
+      afterTake(submission);
+      handleClose();
+      handleCancelTake();
+      setOpenSnackbar(true);
+      setAlertMessage('Submission taken successfully');
+      setAlertType('success');
+    }else{
+      setOpenSnackbar(true);
+      setAlertMessage('Error taking submission');
+      setAlertType('error');
+    }
   };
 
   return (
     <Grid item xs={12} sm={6} md={6} lg={4}>
       <Card 
-        elevation={15}
+        elevation={10}
         sx={{ marginBottom: 2, marginLeft: 2, marginRight: 2, borderRadius: 3 }}
       >
         <CardHeader
@@ -156,30 +192,11 @@ export const DoctorSubmissionCard= () => {
               </Menu>
             </Grid>
           }
-          title="John Doe"
+          title={submission.patient.name}
         />
 
         <CardContent sx={{ minHeight: 250 }}>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit,
-          </Typography>
-
-          {/* <CardActionArea>
-                <CardContent>
-                    <Typography sx={{ whiteSpace: 'pre-line' }}>{ submission.symptoms }</Typography>
-                </CardContent>
-
-                <CardActions sx={{ display: 'flex', justifyContent: 'end', paddingRight: 2 }}>
-                    <Typography variant='body2'>hace 30 minutos</Typography>
-                </CardActions>
-            </CardActionArea> */}
+          <Typography> {submission.symptoms} </Typography>
         </CardContent>
         <CardActions disableSpacing>
           <ExpandMore
@@ -202,6 +219,32 @@ export const DoctorSubmissionCard= () => {
             <Typography paragraph>Weight: 150lbs</Typography>
           </CardContent>
         </Collapse>
+
+         {/* Alert take dialog */}
+      <Dialog
+        open={openAlert}
+        onClose={handleCancelTake}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure you want to delete this submission?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to take {submission.patient.name}'s submission?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelTake}>Cancel</Button>
+          <Button onClick={handleAcceptTake} autoFocus>
+            Accept
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <NewAlert open={openSnackbar} setOpen={setOpenSnackbar} message={alertMessage} type={alertType} />
+
       </Card>
     </Grid>
   );

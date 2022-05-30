@@ -134,7 +134,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     dispatch({ type: "[Auth] - Logout" });
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    router.push("/auth/login");
+    setTimeout(() => {
+      router.push("/auth/login");
+    }, 2000);
   };
 
   return (

@@ -65,7 +65,6 @@
 
 // export default SubmissionCard;
 
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -81,9 +80,16 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
+import { ISubmission } from "../../interfaces";
+import { FC, useState } from "react";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
+}
+
+interface Props {
+    submission: ISubmission;
+    afterDelete: (ISubmission) => void;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -97,19 +103,12 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export const PatientReadySubmissionCard= () =>{
-  const [expanded, setExpanded] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+export const PatientReadySubmissionCard: FC<Props> = ({submission, afterDelete}) =>{
+  const [expanded, setExpanded] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   //value('')
   const [value, setValue] =
-    React.useState(`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-  ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-  aliquip ex ea commodo consequat. Duis aute irure dolor in
-  reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-  pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-  culpa qui officia deserunt Lorem ipsum dolor sit amet, consectetur
-  adipiscing elit`);
+    useState(submission.symptoms);
 
 
   const handleExpandClick = () => {

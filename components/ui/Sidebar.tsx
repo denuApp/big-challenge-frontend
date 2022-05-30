@@ -1,11 +1,7 @@
 import {
+  Backdrop,
   Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+  CircularProgress,
   Divider,
   Drawer,
   List,
@@ -14,7 +10,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { useContext, useState } from 'react';
+import { useContext, useState } from "react";
 import { UIContext } from "../../context/ui/UIContext";
 import { useRouter } from "next/router";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
@@ -31,9 +27,14 @@ const style = "text.secondary";
 export const Sidebar = () => {
   const { sidemenuOpen, closeSideMenu } = useContext(UIContext);
   const { asPath } = useRouter();
-  const {logout}  = useContext(AuthContext);
-  const [openAlert, setOpenAlert] = useState(false);
+  const { logout } = useContext(AuthContext);
   const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    closeSideMenu();
+  };
+
 
   const loggedOut = [
     { text: "Log In", 
@@ -93,21 +94,6 @@ export const Sidebar = () => {
     router.push(url);
   };
 
-  const handleLogout = () => {
-    setOpenAlert(true);
-  };
-
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
-  };
-
-  const  handleAcceptLogout = () => {
-    logout();
-    handleCloseAlert();
-    closeSideMenu();
-  }
-
-
   return (
     <Drawer anchor="left" open={sidemenuOpen}  onClose={closeSideMenu} sx={{opacity: 1}}>
       <Box sx={{ width: 250 }}>
@@ -153,7 +139,8 @@ export const Sidebar = () => {
                   button
                   key={item.text}
                   sx={{borderLeft:  asPath === item.href ? 4 : 0, borderColor: 'secondary.main'}}
-                  onClick={logout}
+
+                  onClick={handleLogout}
                 >
                   <ListItemIcon >{asPath === item.href ? item.activeIcon : item.icon}</ListItemIcon>
                   <ListItemText sx={{color: asPath === item.href ? style : undefined}} primary={item.text} />
@@ -192,22 +179,6 @@ export const Sidebar = () => {
           )}
         </List>
       </Box>
-      <Dialog
-        open={openAlert}
-        onClose={handleCloseAlert}
-        aria-labelledby="LogOut"
-        aria-describedby="Logout-account"
-      >
-        <DialogTitle id="logout-title">
-          {"Are you sure you want to logout?"}
-        </DialogTitle>
-        <DialogActions>
-          <Button onClick={handleCloseAlert}>Disagree</Button>
-          <Button onClick={handleAcceptLogout} autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Drawer>
   );
 };
