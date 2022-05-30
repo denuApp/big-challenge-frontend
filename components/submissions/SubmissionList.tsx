@@ -11,16 +11,13 @@ interface Props {
   status: string;
   added?: boolean;
   setAdded?: (added: boolean) => void;
-  // submissions: ISubmission[];
 }
 
-// const SubmissionList = ({status}) => {
 
 export const SubmissionList: FC<Props> = ({ status, added, setAdded }) => {
   const { getSubmissionsByStatus } = new SubmissionService();
   const [submissions, setSubmissions] = useState<ISubmission[]>([]);
 
-  // const submissionsByStatus = useMemo( () => submissions.filter( submission => submission.status === status ), [ submissions ]);
 
   const getCurrentSubmissions = async () => {
     const { submissions } = await getSubmissionsByStatus(status);
@@ -40,7 +37,6 @@ export const SubmissionList: FC<Props> = ({ status, added, setAdded }) => {
   }, []);
 
   return (
-    //   TODO: aquí haremos drop
     <div>
       <List sx={{ overflow: "auto", height: "calc(90vh - 90px )" }}>
         <>
