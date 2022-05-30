@@ -80,34 +80,34 @@ export const SubmissionsProvider: FC<SubmissionsProviderProps> = ({
 
 // }
 
-const takeSubmission = async(submission: ISubmission): Promise<boolean>  => {
+// const takeSubmission = async(submission: ISubmission): Promise<boolean>  => {
 
-  try{
-    //ver como hacer con axios?
-    const { data } = await bigApi().post('/patient/take-submission', { submission });
-    dispatch({ type: '[Submission] Submission-Taken', payload: data });
+//   try{
+//     //ver como hacer con axios?
+//     const { data } = await bigApi().post('/patient/take-submission', { submission });
+//     dispatch({ type: '[Submission] Submission-Taken', payload: data });
 
-  //hacer get submissions por docotr y esas cosas
+//   //hacer get submissions por docotr y esas cosas
 
-    return true;
-  } catch (error) {
-    return false;
+//     return true;
+//   } catch (error) {
+//     return false;
 
-  }
-}
+//   }
+// }
 
-const uploadPrescription = async(submission: ISubmission, file: File): Promise<boolean>  => {
+// const uploadPrescription = async(submission: ISubmission, file: File): Promise<boolean>  => {
 
-  try{
+//   try{
 
-    const { data } = await bigApi().post('/patient/upload-prescription/{submissions._id}', file);
-    dispatch({ type: '[Submission] Submission-Upload-Prescription', payload: data });
+//     const { data } = await bigApi().post('/patient/upload-prescription/{submissions._id}', file);
+//     dispatch({ type: '[Submission] Submission-Upload-Prescription', payload: data });
 
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
+//     return true;
+//   } catch (error) {
+//     return false;
+//   }
+// }
 
 
 
@@ -127,8 +127,8 @@ const refreshSubmissions = async( ) => {
         // addNewSubmission,
         // updateSubmission,
         // deleteSubmission,
-        takeSubmission,
-        uploadPrescription,
+        // takeSubmission,
+        // uploadPrescription,
         // getSubmissionsByStatus,
       }}
     >

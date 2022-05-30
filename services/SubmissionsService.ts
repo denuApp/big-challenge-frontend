@@ -11,6 +11,16 @@ export default class SubmissionService {
         return {submissions: data.data};
     }
 
+    async getTakenSubmissionsByStatus(status:string):Promise<{submissions: ISubmission[]}>{
+      const { data } = await bigApi().get('get-taken-submissions/?status=' + status);
+      return {submissions: data.data};
+  }
+
+    async getPendingSubmissions():Promise<{submissions: ISubmission[]}>{
+      const { data } = await bigApi().get('get-pending-submissions');
+      return {submissions: data.data};
+    }
+
     async addNewSubmission(
         symptoms: string
       ): Promise<{ hasError: boolean; message?: string }>{
@@ -19,7 +29,7 @@ export default class SubmissionService {
            const currentUser = JSON.parse(localStorage.getItem('user'));
     
            if(currentUser.personalInfo != null){
-              const { data } = await bigApi().post("store-submissions", {
+              await bigApi().post("store-submissions", {
                 patient_id: currentUser.id,
                 symptoms: symptoms,
               });
@@ -68,5 +78,29 @@ export default class SubmissionService {
           return false;
         }
       
+      }
+
+      async takeSubmission (submission: ISubmission): Promise<boolean> {
+
+        try{
+          await bigApi().patch('take-submission/' + submission.id);
+      
+          return true;
+        } catch (error) {
+          return false;
+      
+        }
+      }
+
+      async uploadPrescription (submission: ISubmission, file: File): Promise<boolean>  {
+
+        try{
+      
+          await bigApi().post('upload-prescription/' + submission.id , {file});
+      
+          return true;
+        } catch (error) {
+          return false;
+        }
       }
 }

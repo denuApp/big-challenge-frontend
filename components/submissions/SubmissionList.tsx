@@ -25,23 +25,19 @@ export const SubmissionList: FC<Props> = ({ status, added, setAdded }) => {
   const getCurrentSubmissions = async () => {
     const { submissions } = await getSubmissionsByStatus(status);
     setSubmissions(submissions);
-    console.log(submissions);
     setAdded(false);
 
   };
 
   const afterDelete = (deleted: ISubmission) => {
-    console.log(submissions);
     const subs = submissions.filter( submission => 
     submission.id !== deleted.id);
-    console.log(subs);
-    console.log(deleted);
     setSubmissions(subs);
   }
 
   useEffect(() => {
     getCurrentSubmissions();
-  }, [added]);
+  }, []);
 
   return (
     //   TODO: aquí haremos drop
