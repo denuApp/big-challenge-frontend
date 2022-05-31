@@ -14,6 +14,7 @@ import { useState, useRef, FC } from "react";
 import { SubmissionsContext } from "../../context/submissions";
 import SubmissionService from '../../services/SubmissionsService';
 import { ISubmission } from '../../interfaces/submission';
+import { NewAlert } from "../dialogs";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -42,10 +43,14 @@ export const PrescriptedSubmissions: FC<Props> = ({submission}) => {
   const [image, setImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
 
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState<"success" | "error" | "warning" | "info">('success');
+
   const age = submission.patient.info.birth_date ? new Date().getFullYear() - new Date(submission.patient.info.birth_date).getFullYear() : null;
 
   const fileInput = useRef(null);
-  const { uploadPrescription } = new SubmissionService();
+  const { uploadPrescription, downloadPrescription } = new SubmissionService();
 
   const uploadToServer = async (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -64,6 +69,18 @@ export const PrescriptedSubmissions: FC<Props> = ({submission}) => {
       //   });
     }
   };
+
+  const handleDownloadPrescription = async () => {
+    const {hasError, prescription } = await downloadPrescription(submission);
+    if (hasError) {
+      setAlertType('error');
+      setAlertMessage('Error downloading prescription');
+      setOpenSnackbar(true);
+    }
+    else {
+      window.open(prescription);
+    }
+  }
 
   const handleUpload = () => {
     // fileInput.current.click();
@@ -134,7 +151,8 @@ export const PrescriptedSubmissions: FC<Props> = ({submission}) => {
                 <MenuItem onClick={handleUpload} aria-label="file upload ">
                   Edit Prescription
                 </MenuItem>
-                <MenuItem aria-label="file upload ">
+                <MenuItem onClick={handleDownloadPrescription} aria-label="file upload ">
+                  {console.log(submission.prescription)}
                   Download Prescription
                 </MenuItem>
               </Menu>
@@ -178,6 +196,7 @@ export const PrescriptedSubmissions: FC<Props> = ({submission}) => {
           </CardContent>
         </Collapse>
       </Card>
+      <NewAlert open={openSnackbar} setOpen={setOpenSnackbar} type={alertType} message={alertMessage}  />
     </Grid>
   );
 };

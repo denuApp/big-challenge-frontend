@@ -27,8 +27,8 @@ export default class SubmissionService {
         try {
           //ver como hacer con axios?
            const currentUser = JSON.parse(localStorage.getItem('user'));
-    
-           if(currentUser.personalInfo != null){
+          
+          //  if(currentUser.info != null){
               await bigApi().post("store-submissions", {
                 patient_id: currentUser.id,
                 symptoms: symptoms,
@@ -36,18 +36,18 @@ export default class SubmissionService {
               return {
                 hasError: false,
               };
-            }else{
-              return {
-                hasError: true,
-                message: 'You must complete your personal information before submitting a new submission.',
-              }
-            }
+            // }else{
+            //   return {
+            //     hasError: true,
+            //     message: 'You must complete your personal information before submitting a new submission.',
+            //   }
+            // }
 
         } catch (error) {
           if (axios.isAxiosError(error)) {
             return {
               hasError: true,
-              message: error.response.data.message,
+              message: error.response.data.message + '. Check if your personal information is complete.',
             };
           }
     
@@ -89,6 +89,20 @@ export default class SubmissionService {
         } catch (error) {
           return false;
       
+        }
+      }
+
+      async downloadPrescription (submission: ISubmission): Promise<{prescription?: any; hasError: boolean }> {
+        try{
+          const { data } = await bigApi().get('download-file/' + submission.id);
+          return {  prescription: data,
+                    hasError: false
+          };
+        }
+        catch (error) {
+          return {
+            hasError: true,
+          };
         }
       }
 

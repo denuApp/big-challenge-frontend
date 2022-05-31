@@ -1,69 +1,4 @@
-// import * as React from 'react'
-// import { Card, CardActionArea, CardActions, CardContent, CardHeader, IconButtonProps, Typography, IconButton, MenuItem, Dialog, Button } from '@mui/material';
-// import { ISubmission } from '../../interfaces/submission';
-// import { padding, styled, borderRadius, fontWeight } from '@mui/system';
-// import CardMedia from '@mui/material/CardMedia';
-// import Avatar from '@mui/material/Avatar';
-// import { red } from '@mui/material/colors';
-// import FavoriteIcon from '@mui/icons-material/Favorite';
-// import ShareIcon from '@mui/icons-material/Share';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-// // interface Props {
-// //     submission: ISubmission;
-// // }
-
-// interface ExpandMoreProps extends IconButtonProps {
-//     expand: boolean;
-//   }
-
-//   const ExpandMore = styled((props: ExpandMoreProps) => {
-//     const { expand, ...other } = props;
-//     return <IconButton {...other} />;
-//   })(({ theme, expand }) => ({
-//     transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-//     marginLeft: 'auto',
-//     transition: theme.transitions.create('transform', {
-//       duration: theme.transitions.duration.shortest,
-//     }),
-//   }));
-
-// // const SubmissionCard:FC<Props> = ({submission}) => {
-
-// const SubmissionCard = () => {
-//   return (
-//     <Card
-//     sx={{ marginBottom: 2, marginLeft: 2, marginRight: 2}}
-//     >
-// <CardActionArea>
-//         <CardContent>
-//             <Typography sx={{ whiteSpace: 'pre-line' }}>'Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-//             sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-//             quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-//             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-//             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-//             </Typography>
-//         </CardContent>
-
-//         <CardActions sx={{ display: 'flex', justifyContent: 'end', paddingRight: 2 }}>
-//             <Typography variant='body2'>hace 30 minutos</Typography>
-//         </CardActions>
-//     </CardActionArea>
-//     {/* <CardActionArea>
-//         <CardContent>
-//             <Typography sx={{ whiteSpace: 'pre-line' }}>{ submission.symptoms }</Typography>
-//         </CardContent>
-
-//         <CardActions sx={{ display: 'flex', justifyContent: 'end', paddingRight: 2 }}>
-//             <Typography variant='body2'>hace 30 minutos</Typography>
-//         </CardActions>
-//     </CardActionArea> */}
-// </Card>
-//   )
-// }
-
-// export default SubmissionCard;
 
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
@@ -82,6 +17,8 @@ import {
 } from "@mui/material";
 import { ISubmission } from "../../interfaces";
 import { FC, useState } from "react";
+import SubmissionService from '../../services/SubmissionsService';
+import { NewAlert } from '../dialogs/NewAlert';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -109,6 +46,11 @@ export const PatientReadySubmissionCard: FC<Props> = ({submission, afterDelete})
   //value('')
   const [value, setValue] =
     useState(submission.symptoms);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState<"success" | "error" | "warning" | "info">('success');
+  const { downloadPrescription } = new SubmissionService();
+
 
 
   const handleExpandClick = () => {
@@ -122,6 +64,18 @@ export const PatientReadySubmissionCard: FC<Props> = ({submission, afterDelete})
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
+
+  const handleDownloadPrescription = async () => {
+    const {hasError, prescription } = await downloadPrescription(submission);
+    if (hasError) {
+      setAlertType('error');
+      setAlertMessage('Error downloading prescription');
+      setOpenSnackbar(true);
+    }
+    else {
+      window.open(prescription);
+    }
+  }
 
   
   return (
@@ -206,9 +160,10 @@ export const PatientReadySubmissionCard: FC<Props> = ({submission, afterDelete})
         onClose={handleCloseMenu}
       >
         
-        <MenuItem >Download Prescription </MenuItem>
+        <MenuItem onClick={handleDownloadPrescription}>Download Prescription </MenuItem>
       </Menu>
 
+      <NewAlert open={openSnackbar} setOpen={setOpenSnackbar} type={alertType} message={alertMessage}  />
     </Grid>
   );
 }
