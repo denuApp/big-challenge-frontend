@@ -51,7 +51,6 @@ export const SubmissionList: FC<Props> = ({ status, added, setAdded }) => {
         </>
       </List>
 
-      {/* </Paper> */}
     </div>
   );
 };

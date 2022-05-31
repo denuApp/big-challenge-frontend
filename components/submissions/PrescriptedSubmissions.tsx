@@ -42,6 +42,8 @@ export const PrescriptedSubmissions: FC<Props> = ({submission}) => {
   const [image, setImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
 
+  const age = submission.patient.info.birth_date ? new Date().getFullYear() - new Date(submission.patient.info.birth_date).getFullYear() : null;
+
   const fileInput = useRef(null);
   const { uploadPrescription } = new SubmissionService();
 
@@ -163,10 +165,10 @@ export const PrescriptedSubmissions: FC<Props> = ({submission}) => {
             <Typography variant="h5" sx={{ marginBottom: "10px" }}>
               Patient Info:
             </Typography>
-            <Typography paragraph>Gender: Male</Typography>
-            <Typography paragraph>Age: 30</Typography>
-            <Typography paragraph>Height: 5'10"</Typography>
-            <Typography paragraph>Weight: 150lbs</Typography>
+            <Typography paragraph>Gender: {submission.patient.info.gender}</Typography>
+            <Typography paragraph>Age: {age}</Typography>
+            <Typography paragraph>Height: {submission.patient.info.height}mts</Typography>
+            <Typography paragraph>Weight: {submission.patient.info.weight}kg</Typography>
             <input
               type="file"
               ref={fileInput}
