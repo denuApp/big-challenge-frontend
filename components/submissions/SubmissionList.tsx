@@ -34,7 +34,7 @@ export const SubmissionList: FC<Props> = ({ status, added, setAdded }) => {
 
   useEffect(() => {
     getCurrentSubmissions();
-  }, []);
+  }, [added]);
 
   return (
     <div>

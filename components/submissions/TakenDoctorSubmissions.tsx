@@ -9,10 +9,21 @@ import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Grid, Menu, MenuItem } from "@mui/material";
+import {
+  Grid,
+  Menu,
+  MenuItem,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 import { useState, useRef, FC } from "react";
-import { ISubmission } from '../../interfaces/submission';
-import SubmissionService from '../../services/SubmissionsService';
+import { ISubmission } from "../../interfaces/submission";
+import SubmissionService from "../../services/SubmissionsService";
+import { NewAlert } from "../dialogs";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -20,6 +31,7 @@ interface ExpandMoreProps extends IconButtonProps {
 
 interface Props {
   submission: ISubmission;
+  setUploaded: (uploaded: boolean) => void;
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -33,42 +45,63 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export const TakenDoctorSubmissionCard: FC<Props> = ({submission}) => {
+export const TakenDoctorSubmissionCard: FC<Props> = ({ submission, setUploaded }) => {
   const [expanded, setExpanded] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const [image, setImage] = useState(null);
-  const [createObjectURL, setCreateObjectURL] = useState(null);
+  const [file, setFile] = useState(null);
 
-  const fileInput = useRef(null);
+  const [openAcceptUpload, setOpenAcceptUpload] = useState(false);
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState<
+    "success" | "error" | "warning" | "info"
+  >("success");
+
+  const fileInput = useRef<HTMLInputElement>(null);
 
   const { uploadPrescription } = new SubmissionService();
 
-  const age = submission.patient.info.birth_date ? new Date().getFullYear() - new Date(submission.patient.info.birth_date).getFullYear() : null;
+  const age = submission.patient.info.birth_date
+    ? new Date().getFullYear() -
+      new Date(submission.patient.info.birth_date).getFullYear()
+    : null;
 
 
-  const uploadToServer = async (event) => {
-    if (event.target.files && event.target.files[0]) {
-      const i = event.target.files[0];
+  const onFileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files[0];
 
-      setImage(i);
-      setCreateObjectURL(URL.createObjectURL(i));
-
-      //   const body = new FormData();
-      //   body.append("file", image);
-      //   const response = await fetch("/api/upload-file", {
-      //     method: "POST",
-      //     body
-      //   });
+    if (file) {
+      setFile(file);
+      setOpenAcceptUpload(true);
+    } else {
+      return;
     }
   };
 
-  const handleClick = () => {
-    // fileInput.current.click();
-    const client = filestack.init("Aej2qZqQQQWyQQQQQQQQQ");
-    client.picker().open();
+  const handleCancelUpload = () => {
+    setOpenAcceptUpload(false);
   };
+
+  const handleAcceptUpload = async () => {
+    const {hasError} = await uploadPrescription(submission, file);
+
+    if (!hasError) {
+      setOpenSnackbar(true);
+      setAlertMessage("Prescription uploaded successfully");
+      setAlertType("success");
+      setOpenAcceptUpload(false);
+      setUploaded(true);
+    } else {
+      setOpenSnackbar(true);
+      setAlertMessage("Error uploading prescription");
+      setAlertType("error");
+      setOpenAcceptUpload(false);
+    }
+  };
+
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -94,6 +127,7 @@ export const TakenDoctorSubmissionCard: FC<Props> = ({submission}) => {
           minHeight: 350,
         }}
       >
+        <CardHeader />
         <CardHeader
           action={
             <Grid>
@@ -105,7 +139,7 @@ export const TakenDoctorSubmissionCard: FC<Props> = ({submission}) => {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <MoreVertIcon color="secondary"/>
+                <MoreVertIcon color="secondary" />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -122,17 +156,20 @@ export const TakenDoctorSubmissionCard: FC<Props> = ({submission}) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <input
-                  type="file"
-                  ref={fileInput}
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  onChange={uploadToServer}
-                />
 
-                <MenuItem onClick={handleClick} aria-label="file upload ">
+                <MenuItem
+                  aria-label="file upload "
+                  onClick={() => fileInput.current?.click()}
+                >
                   Upload Prescription
                 </MenuItem>
+                <input
+                  ref={fileInput}
+                  type="file"
+                  accept=".txt"
+                  style={{ display: "none" }}
+                  onChange={onFileSelected}
+                />
               </Menu>
             </Grid>
           }
@@ -140,11 +177,7 @@ export const TakenDoctorSubmissionCard: FC<Props> = ({submission}) => {
         />
 
         <CardContent sx={{ minHeight: 250 }}>
-          <Typography>
-           {submission.symptoms}
-          </Typography>
-
-        
+          <Typography>{submission.symptoms}</Typography>
         </CardContent>
 
         <CardActions disableSpacing>
@@ -154,7 +187,7 @@ export const TakenDoctorSubmissionCard: FC<Props> = ({submission}) => {
             aria-expanded={expanded}
             aria-label="show more"
           >
-            <ExpandMoreIcon color="secondary"/>
+            <ExpandMoreIcon color="secondary" />
           </ExpandMore>
         </CardActions>
 
@@ -163,10 +196,16 @@ export const TakenDoctorSubmissionCard: FC<Props> = ({submission}) => {
             <Typography variant="h5" sx={{ marginBottom: "10px" }}>
               Patient Info:
             </Typography>
-            <Typography paragraph>Gender: {submission.patient.info.gender}</Typography>
+            <Typography paragraph>
+              Gender: {submission.patient.info.gender}
+            </Typography>
             <Typography paragraph>Age: {age}</Typography>
-            <Typography paragraph>Height: {submission.patient.info.height}mts</Typography>
-            <Typography paragraph>Weight: {submission.patient.info.weight}kg</Typography>
+            <Typography paragraph>
+              Height: {submission.patient.info.height}mts
+            </Typography>
+            <Typography paragraph>
+              Weight: {submission.patient.info.weight}kg
+            </Typography>
             <input
               type="file"
               ref={fileInput}
@@ -175,7 +214,36 @@ export const TakenDoctorSubmissionCard: FC<Props> = ({submission}) => {
             />
           </CardContent>
         </Collapse>
+
+        {/* Alert accept upload dialog */}
+        <Dialog
+          open={openAcceptUpload}
+          onClose={handleCancelUpload}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Upload Prescription"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you want to upload "{file?.name}" prescription?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelUpload}>Cancel</Button>
+            <Button onClick={handleAcceptUpload} autoFocus>
+              Accept
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Card>
+      <NewAlert
+            open={openSnackbar}
+            setOpen={setOpenSnackbar}
+            message={alertMessage}
+            type={alertType}
+          />
     </Grid>
   );
-}
+};

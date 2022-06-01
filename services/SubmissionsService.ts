@@ -27,8 +27,7 @@ export default class SubmissionService {
         try {
           //ver como hacer con axios?
            const currentUser = JSON.parse(localStorage.getItem('user'));
-          
-          //  if(currentUser.info != null){
+
               await bigApi().post("store-submissions", {
                 patient_id: currentUser.id,
                 symptoms: symptoms,
@@ -36,12 +35,7 @@ export default class SubmissionService {
               return {
                 hasError: false,
               };
-            // }else{
-            //   return {
-            //     hasError: true,
-            //     message: 'You must complete your personal information before submitting a new submission.',
-            //   }
-            // }
+            
 
         } catch (error) {
           if (axios.isAxiosError(error)) {
@@ -106,15 +100,17 @@ export default class SubmissionService {
         }
       }
 
-      async uploadPrescription (submission: ISubmission, file: File): Promise<boolean>  {
+      async uploadPrescription (submission: ISubmission, file: File): Promise<{hasError: boolean}>  {
 
+        // const fd = new FormData();
+        // fd.append('prescription', file);
         try{
-      
-          await bigApi().post('upload-prescription/' + submission.id , {file});
-      
-          return true;
+          console.log(file);
+          await bigApi().post('upload-file/' + submission.id , {prescription: file} ,{headers: {'Content-Type': 'multipart/form-data'}});
+         
+          return {hasError: false};
         } catch (error) {
-          return false;
+          return {hasError: true};
         }
       }
 }

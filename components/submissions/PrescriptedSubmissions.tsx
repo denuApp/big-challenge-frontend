@@ -9,7 +9,7 @@ import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Grid, Menu, MenuItem } from "@mui/material";
+import { Grid, Menu, MenuItem, List, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { useState, useRef, FC } from "react";
 import { SubmissionsContext } from "../../context/submissions";
 import SubmissionService from '../../services/SubmissionsService';
@@ -40,8 +40,8 @@ export const PrescriptedSubmissions: FC<Props> = ({submission}) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const [image, setImage] = useState(null);
-  const [createObjectURL, setCreateObjectURL] = useState(null);
+  const [file, setFile] = useState(null);
+  const fileInput = useRef<HTMLInputElement>(null);
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -49,26 +49,10 @@ export const PrescriptedSubmissions: FC<Props> = ({submission}) => {
 
   const age = submission.patient.info.birth_date ? new Date().getFullYear() - new Date(submission.patient.info.birth_date).getFullYear() : null;
 
-  const fileInput = useRef(null);
+  const [openAcceptUpload, setOpenAcceptUpload] = useState(false);
+
   const { uploadPrescription, downloadPrescription } = new SubmissionService();
 
-  const uploadToServer = async (event) => {
-    if (event.target.files && event.target.files[0]) {
-      const i = event.target.files[0];
-
-      setImage(i);
-      setCreateObjectURL(URL.createObjectURL(i));
-
-      //   const body = new FormData();
-      //   body.append("file", image);
-      //   uploadPrescription(body);
-      //   no se si va lo de abajo (casi seguro no)
-      //   const response = await fetch("/api/upload-file", {
-      //     method: "POST",
-      //     body
-      //   });
-    }
-  };
 
   const handleDownloadPrescription = async () => {
     const {hasError, prescription } = await downloadPrescription(submission);
@@ -82,10 +66,35 @@ export const PrescriptedSubmissions: FC<Props> = ({submission}) => {
     }
   }
 
-  const handleUpload = () => {
-    // fileInput.current.click();
-    const client = filestack.init("Aej2qZqQQQWyQQQQQQQQQ");
-    client.picker().open();
+  const onFileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      setFile(file);
+      setOpenAcceptUpload(true);
+    } else {
+      return;
+    }
+  };
+
+  const handleCancelUpload = () => {
+    setOpenAcceptUpload(false);
+  };
+
+  const handleAcceptUpload = async () => {
+    const {hasError} = await uploadPrescription(submission, file);
+
+    if (!hasError) {
+      setOpenSnackbar(true);
+      setAlertMessage("Prescription uploaded successfully");
+      setAlertType("success");
+      setOpenAcceptUpload(false);
+    } else {
+      setOpenSnackbar(true);
+      setAlertMessage("Error uploading prescription");
+      setAlertType("error");
+      setOpenAcceptUpload(false);
+    }
   };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -143,18 +152,17 @@ export const PrescriptedSubmissions: FC<Props> = ({submission}) => {
                 <input
                   type="file"
                   ref={fileInput}
-                  accept="image/*"
+                  accept=".txt"
                   style={{ display: "none" }}
-                  onChange={uploadToServer}
+                  onChange={onFileSelected}
                 />
-
-                <MenuItem onClick={handleUpload} aria-label="file upload ">
+                <MenuItem  onClick={() => fileInput.current?.click()} aria-label="file edit ">
                   Edit Prescription
                 </MenuItem>
                 <MenuItem onClick={handleDownloadPrescription} aria-label="file upload ">
-                  {console.log(submission.prescription)}
                   Download Prescription
                 </MenuItem>
+                
               </Menu>
             </Grid>
           }
@@ -187,15 +195,34 @@ export const PrescriptedSubmissions: FC<Props> = ({submission}) => {
             <Typography paragraph>Age: {age}</Typography>
             <Typography paragraph>Height: {submission.patient.info.height}mts</Typography>
             <Typography paragraph>Weight: {submission.patient.info.weight}kg</Typography>
-            <input
-              type="file"
-              ref={fileInput}
-              accept="image/*"
-              style={{ display: "none" }}
-            />
           </CardContent>
         </Collapse>
       </Card>
+
+       {/* Alert accept upload dialog */}
+       <Dialog
+          open={openAcceptUpload}
+          onClose={handleCancelUpload}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Upload Prescription"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you want to upload "{file?.name}" prescription?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelUpload}>Cancel</Button>
+            <Button onClick={handleAcceptUpload} autoFocus>
+              Accept
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        
       <NewAlert open={openSnackbar} setOpen={setOpenSnackbar} type={alertType} message={alertMessage}  />
     </Grid>
   );

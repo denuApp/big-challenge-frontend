@@ -12,6 +12,7 @@ const taskHistory = () => {
   const {getTakenSubmissionsByStatus} = new SubmissionService();
   const [inProgress, setInProgress] = useState<ISubmission[]>([]);
   const [ready, setReady] = useState<ISubmission[]>([]);
+  const [uploaded, setUploaded] = useState(false);
 
   const getCurrentSubmissions = async (status: string) => {
     const { submissions } = await getTakenSubmissionsByStatus(status);
@@ -21,14 +22,13 @@ const taskHistory = () => {
     if (status === 'ready') {
       setReady(submissions);
     }
+    setUploaded(false);
   };
 
   useEffect(() => {
     getCurrentSubmissions('in_progress');
     getCurrentSubmissions('ready');
-  }, []);
-
-
+  }, [uploaded]);
  
   return (
     <Layout  >
@@ -37,19 +37,12 @@ const taskHistory = () => {
 
         <Grid container spacing={ 2 } sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
 
-            {/* <TakenDoctorSubmissionCard />
-            <TakenDoctorSubmissionCard />
-            <TakenDoctorSubmissionCard />
-            <TakenDoctorSubmissionCard />
-
-          </Grid> */}
-
           <Grid item xs={ 12 } sm={ 6 }>
           <Card  sx={{ height: 'calc(100vh - 100px )' , borderRadius: '15px'}}>
           <CardHeader align='right' title="NOT PRESCRIPTED" sx={{ padding: '30px' }}/>
             <List sx={{overflow: 'auto', height: 'calc(90vh - 90px )'}}>
               {inProgress.map((submission) => (
-                <TakenDoctorSubmissionCard key={submission.id} submission={submission} />
+                <TakenDoctorSubmissionCard key={submission.id} submission={submission} setUploaded={setUploaded} />
               ))}
             </List>
 
