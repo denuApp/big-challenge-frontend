@@ -127,7 +127,6 @@ export const TakenDoctorSubmissionCard: FC<Props> = ({ submission, setUploaded }
           minHeight: 350,
         }}
       >
-        <CardHeader />
         <CardHeader
           action={
             <Grid>
@@ -215,8 +214,9 @@ export const TakenDoctorSubmissionCard: FC<Props> = ({ submission, setUploaded }
           </CardContent>
         </Collapse>
 
-        {/* Alert accept upload dialog */}
-        <Dialog
+      </Card>
+      {/* Alert accept upload dialog */}
+      <Dialog
           open={openAcceptUpload}
           onClose={handleCancelUpload}
           aria-labelledby="alert-dialog-title"
@@ -237,7 +237,6 @@ export const TakenDoctorSubmissionCard: FC<Props> = ({ submission, setUploaded }
             </Button>
           </DialogActions>
         </Dialog>
-      </Card>
       <NewAlert
             open={openSnackbar}
             setOpen={setOpenSnackbar}

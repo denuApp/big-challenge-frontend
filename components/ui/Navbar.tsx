@@ -1,26 +1,18 @@
 import { AppBar, Grid, IconButton, Toolbar, Typography } from "@mui/material"
 import  MenuOutlinedIcon from "@mui/icons-material/MenuOutlined"
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, FC } from 'react';
 import { UIContext } from '../../context/ui';
 import { AuthContext } from "../../context/auth";
 import { IUser } from '../../interfaces/user';
 import UserService from '../../services/UsersService';
 
+interface Props {
+    user: IUser;
+}
 
-export const Navbar =  () => {
+export const Navbar: FC<Props> =  ({user}) => {
 
     const { openSideMenu } = useContext( UIContext );
-    const { getUser } = new UserService( );
-    const [user, setUser] = useState<IUser>(null);
-
-    const getCurrentUser = async () => {
-        const {user} = await getUser();
-        setUser(user);
-    }
-
-    useEffect(() => {
-        getCurrentUser();
-    }, []);
 
   return (
     <AppBar position="sticky"> 

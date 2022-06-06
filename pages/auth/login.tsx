@@ -16,7 +16,7 @@ import {
   Backdrop,
   CircularProgress,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout } from "../../components/layouts/Layout";
 import NextLink from "next/link";
 import { url } from "inspector";
@@ -25,6 +25,10 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/auth";
 import { useRouter } from "next/router";
 import { loadDefaultErrorComponents } from "next/dist/server/load-components";
+import Unauthorized from "../../components/error/Unauthorized";
+import { IUser } from "../../interfaces";
+import UserService from "../../services/UsersService";
+import { Navigate } from "react-router-dom";
 
 interface State {
   email: string;
@@ -42,6 +46,21 @@ const login = () => {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = React.useState("");
   const [openLoading, setOpenLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const { getUser } = new UserService();
+
+  const checkAuthorized = async () => {
+    const { user } = await getUser();
+
+    if (user === null) {
+      setChecked(true);
+    } else if (user.role[0].name === "doctor") {
+      router.push("/doctor/allSubmissions");
+    }else {
+      router.push("/patient/dashboard");
+    }
+    
+  };
 
   const handleLogin = async () => {
     const { hasError, message, user } = await login(values.email, values.password);
@@ -72,6 +91,10 @@ const login = () => {
   ) => {
     event.preventDefault();
   };
+
+  useEffect(() => {
+    checkAuthorized();
+  }, []);
 
   return (
     <Layout>

@@ -10,6 +10,7 @@ export default class UserService {
 
     async getUser (): Promise<{user: IUser}> {
         const user = await bigApi().get("get-user");
+        localStorage.setItem('user', JSON.stringify(user.data.data));
         return {user: user.data.data};
     };
 

@@ -10,7 +10,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { UIContext } from "../../context/ui/UIContext";
 import { useRouter } from "next/router";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
@@ -19,12 +19,16 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import { AuthContext } from "../../context/auth";
+import { IUser } from '../../interfaces/user';
 
 const style = "text.secondary";
 
+interface Props {
+  user: IUser;
+}
 
 
-export const Sidebar = () => {
+export const Sidebar: FC<Props> = ({user}) => {
   const { sidemenuOpen, closeSideMenu } = useContext(UIContext);
   const { asPath } = useRouter();
   const { logout } = useContext(AuthContext);
@@ -103,7 +107,7 @@ export const Sidebar = () => {
 
 
         <List >
-          {(asPath === "/auth/login" || asPath === "/auth/signup") && (
+          {(user == null) && (
             <>
               {loggedOut.map((item, index) => (
                 <ListItem
@@ -119,8 +123,7 @@ export const Sidebar = () => {
             </>
           )}
 
-          {(asPath === "/patient/dashboard" ||
-            asPath === "/patient/personalInfo") && (
+          {(user != null && user.role[0].name === 'patient') && (
             <>
               {patient.map((item, index) => (
                 <ListItem
@@ -149,8 +152,7 @@ export const Sidebar = () => {
             </>
           )}
 
-          {(asPath === "/doctor/allSubmissions" ||
-            asPath === "/doctor/taskHistory") && (
+          {(user != null && user.role[0].name === 'doctor') && (
             <>
               {doctor.map((item, index) => (
                 <ListItem
